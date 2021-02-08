@@ -432,7 +432,10 @@ function process_commands_query(query, mapKey, userid) {
                 break;
             case 'leave':
                     out = _CMD_LEAVE;
-            case 'bye bye':
+            case 'goodbye':
+                    out = _CMD_LEAVE;
+                break;
+            case 'go away':
                     out = _CMD_LEAVE;
                 break;
             case 'hello':
