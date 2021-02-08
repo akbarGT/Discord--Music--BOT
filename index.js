@@ -405,6 +405,9 @@ function process_commands_query(query, mapKey, userid) {
             case 'skip':
                 out = _CMD_SKIP;
                 break;
+            case 'next':
+                out = _CMD_SKIP;
+                break;
             case 'shuffle':
                 out = _CMD_SHUFFLE;
                 break;
@@ -413,6 +416,9 @@ function process_commands_query(query, mapKey, userid) {
                 break;
             case 'stop':
                 out = _CMD_PAUSE;
+                break;
+            case 'pause':
+                    out = _CMD_PAUSE;
                 break;
             case 'resume':
                 out = _CMD_RESUME;
@@ -424,8 +430,13 @@ function process_commands_query(query, mapKey, userid) {
             case 'list':
                 out = _CMD_QUEUE;
                 break;
+            case 'leave':
+                    out = _CMD_LEAVE;
+            case 'bye bye':
+                    out = _CMD_LEAVE;
+                break;
             case 'hello':
-                out = 'hello back =)'
+                out = 'hi there :)'
                 break;
             case 'favorites':
                 out = _CMD_FAVORITES;
