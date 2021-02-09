@@ -1,11 +1,11 @@
-# DiscordSpeechBot
-A speech-to-text bot for discord with music commands and more written in NodeJS.
+# Discord-Music-BOT
+A bot for discord which you can control using voice comamnds. 
 
 ## Demo:
 
-[![Discord Speech Bot Demo](http://img.youtube.com/vi/cfFI7E32v_8/0.jpg)](http://www.youtube.com/watch?v=cfFI7E32v_8 "Discord Speech Bot Demo")
 
-Try the bot for yourself on our Discord server: https://discord.gg/ApdTMG9
+Try the bot for yourself on our Discord server: https://discord.com/oauth2/authorize?client_id=808315805108142100&scope=bot&permissions=37740480
+
 
 You can follow the steps below to get this bot up and running.
 
@@ -171,12 +171,4 @@ By default WitAI's free API is used for voice recognition / transcription. But y
 5. Create a new Service Account Key (or use existing) and download the json file.
 6. Put the json file inside your bot directory and rename it to `gspeech_key.json`.
 
-## Contact
-For enquiries or issues get in touch with me:
-
-Name: [Ilya Nevolin](https://www.linkedin.com/in/iljanevolin/)
-
-Email: ilja.nevolin@gmail.com
-
-Discord: https://discord.gg/ApdTMG9
-
+##

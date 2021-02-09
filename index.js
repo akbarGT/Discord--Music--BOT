@@ -290,8 +290,9 @@ function getHelpString() {
         out += 'melody pause/resume\n'
         out += 'melody shuffle\n'
         out += 'melody genres\n'
-        out += 'melody set favorite\n'
+        out += 'melody set favorite. To add currently playing song to persnoal playlist\n'
         out += 'melody favorites\n'
+        out += 'melody goodbye\n'
         out += 'melody leave/go away/ goodbye\n'
         out += 'melody list\n'
         out += 'melody clear list\n';
@@ -438,9 +439,12 @@ function process_commands_query(query, mapKey, userid) {
             case 'goodbye':
                     out = _CMD_LEAVE;
                 break;
-            case 'go away':
+            case 'fuck off':
                     out = _CMD_LEAVE;
                 break;
+            case 'fuck of':
+                    out = _CMD_LEAVE;
+                    break;
             case 'hello':
                 out = 'i am melody :)'
                 break;
