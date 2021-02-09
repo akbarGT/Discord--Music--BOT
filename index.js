@@ -226,6 +226,7 @@ discordClient.on('message', async (msg) => {
                     msg.reply('Already connected')
             }
         } else if (msg.content.trim().toLowerCase() == _CMD_LEAVE) {
+            voice_Connection.play('hero1.mp3', { volume: 1 });
             if (guildMap.has(mapKey)) {
                 let val = guildMap.get(mapKey);
                 if (val.voice_Channel) val.voice_Channel.leave()
@@ -322,7 +323,7 @@ async function connect(msg, mapKey) {
         let text_Channel = await discordClient.channels.fetch(msg.channel.id);
         if (!text_Channel) return msg.reply("Error: The text channel does not exist!");
         let voice_Connection = await voice_Channel.join();
-        voice_Connection.play('hero2.mp3', { volume: 0.5 });
+        voice_Connection.play('hero2.mp3', { volume: 1 });
         guildMap.set(mapKey, {
             'text_Channel': text_Channel,
             'voice_Channel': voice_Channel,
