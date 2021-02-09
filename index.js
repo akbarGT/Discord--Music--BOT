@@ -665,7 +665,7 @@ async function music_message(message, mapKey) {
     
     queueTryPlayNext(mapKey, (title)=>{
         message.react(EMOJI_GREEN_CIRCLE);
-        message.channel.send('Now playing: **' + title + '**')
+        message.channel.send('Now playing: **' + title + '**', {tts=true})
     }, (msg)=>{
         if (msg && msg.length) message.channel.send(msg);
     });
