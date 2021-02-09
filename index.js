@@ -232,8 +232,8 @@ discordClient.on('message', async (msg) => {
                 if (val.voice_Connection) val.voice_Connection.disconnect()
                 if (val.musicYTStream) val.musicYTStream.destroy()
                     guildMap.delete(mapKey)
-                msg.reply("Disconnected.", {tts: true})
-                msg.channel.send("Bye", {tts:true})
+                msg.reply(" ")
+                msg.channel.send("Disconnected", {tts:true})
             } else {
                 msg.reply("Cannot leave because not connected.")
             }
