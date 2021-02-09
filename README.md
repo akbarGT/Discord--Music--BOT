@@ -85,10 +85,10 @@ Make sure your server has a text and voice channel.
 Examples:
 
 ```
-!play https://www.youtube.com/watch?v=vK1YiArMDfg
-!play red hot chili peppers californication
-!list
-!skip
+.play https://www.youtube.com/watch?v=0I647GU3Jsc
+.play natural imagine dragons
+.list
+.skip
 ```
 
 ### Voice commands
@@ -108,7 +108,7 @@ A successful voice command looks like this:
 
 `<long pause>   music play 'justin timberlake cry river'   <long pause>`
 
-### Notes: 
+### Notes:
 - Each voice command starts with `music`.
 - Each user talks to a separate channel, the bot hears every user separately.
 - Only when your user picture turns green in the voice channel will the bot receive your audio.
@@ -179,4 +179,3 @@ Name: [Ilya Nevolin](https://www.linkedin.com/in/iljanevolin/)
 Email: ilja.nevolin@gmail.com
 
 Discord: https://discord.gg/ApdTMG9
-

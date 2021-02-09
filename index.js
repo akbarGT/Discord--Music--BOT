@@ -73,7 +73,7 @@ async function convert_audio(input) {
 const SETTINGS_FILE = 'settings.json';
 
 let DISCORD_TOK = null;
-let WITAPIKEY = null; 
+let WITAPIKEY = null;
 let SPOTIFY_TOKEN_ID = null;
 let SPOTIFY_TOKEN_SECRET = null;
 
@@ -92,7 +92,7 @@ function loadConfig() {
     }
     if (!DISCORD_TOK || !WITAPIKEY)
         throw 'failed loading config #113 missing keys!'
-    
+
 }
 loadConfig()
 
@@ -283,16 +283,17 @@ discordClient.on('message', async (msg) => {
 function getHelpString() {
     let out = '**VOICE COMMANDS:**\n'
         out += '```'
-        out += 'music help\n'
-        out += 'music play [random, favorites, <genre> or query]\n'
+        out += 'melody help\n'
+        out += 'melody play [random, favorites, <genre> or query]\n'
         out += 'music skip\n'
-        out += 'music pause/resume\n'
-        out += 'music shuffle\n'
-        out += 'music genres\n'
-        out += 'music set favorite\n'
-        out += 'music favorites\n'
-        out += 'music list\n'
-        out += 'music clear list\n';
+        out += 'melody pause/resume\n'
+        out += 'melody shuffle\n'
+        out += 'melody genres\n'
+        out += 'melody set favorite\n'
+        out += 'melody favorites\n'
+        out += 'melody list\n'
+        out += 'melody clear list\n';
+        out += 'melody leave/goodbye/go-away\n';
         out += '```'
 
         out += '**TEXT COMMANDS:**\n'
@@ -322,7 +323,7 @@ async function connect(msg, mapKey) {
         let text_Channel = await discordClient.channels.fetch(msg.channel.id);
         if (!text_Channel) return msg.reply("Error: The text channel does not exist!");
         let voice_Connection = await voice_Channel.join();
-        voice_Connection.play('sound.mp3', { volume: 0.5 });
+        voice_Connection.play('connected.mp3', { volume: 0.5 });
         guildMap.set(mapKey, {
             'text_Channel': text_Channel,
             'voice_Channel': voice_Channel,
@@ -355,7 +356,7 @@ function speak_impl(voice_Connection, mapKey) {
         console.log(`I'm listening to ${user.username}`)
         // this creates a 16-bit signed PCM, stereo 48KHz stream
         const audioStream = voice_Connection.receiver.createStream(user, { mode: 'pcm' })
-        audioStream.on('error',  (e) => { 
+        audioStream.on('error',  (e) => {
             console.log('audioStream: ' + e)
         });
         let buffer = [];
@@ -367,7 +368,7 @@ function speak_impl(voice_Connection, mapKey) {
             const duration = buffer.length / 48000 / 4;
             console.log("duration: " + duration)
 
-            if (duration < 1.0 || duration > 19) { // 20 seconds max dur
+            if (duration < 1.0 || duration > 7) { // 6 seconds max duration
                 console.log("TOO SHORT / TOO LONG; SKPPING")
                 return;
             }
@@ -438,6 +439,9 @@ function process_commands_query(query, mapKey, userid) {
             case 'go away':
                     out = _CMD_LEAVE;
                 break;
+           case 'melody fuck off'
+                    out= _CMD_LEAVE;
+                    break;
             case 'hello':
                 out = 'hi there :)'
                 break;
@@ -657,10 +661,10 @@ async function music_message(message, mapKey) {
                 if (msg && msg.length) message.channel.send(msg);
             })
 
-        } 
+        }
 
     }
-    
+
     queueTryPlayNext(mapKey, (title)=>{
         message.react(EMOJI_GREEN_CIRCLE);
         message.channel.send('Now playing: **' + title + '**')
@@ -707,7 +711,7 @@ function unFavorite(qry, mapKey, cbok, cberr) {
             cberr('No favorites.');
         } else {
             if (GUILD_FAVORITES[mapKey].includes(qry)) {
-                GUILD_FAVORITES[mapKey] = GUILD_FAVORITES[mapKey].filter(e => e !== qry); 
+                GUILD_FAVORITES[mapKey] = GUILD_FAVORITES[mapKey].filter(e => e !== qry);
                 cbok()
             } else {
                 cberr('Favorite not found.');
@@ -815,7 +819,7 @@ async function queueTryPlayNext(mapKey, cbok, cberr) {
         val.musicDispatcher.on('start', () => {
             cbok(title)
         });
-        
+
     } catch (e) {
         console.log('queueTryPlayNext: ' + e)
         cberr('Error playing, try again?')
@@ -897,7 +901,7 @@ async function transcribe_witai(buffer) {
     try {
         // ensure we do not send more than one request per second
         if (witAI_lastcallTS != null) {
-            let now = Math.floor(new Date());    
+            let now = Math.floor(new Date());
             while (now - witAI_lastcallTS < 1000) {
                 console.log('sleep')
                 await sleep(100);
