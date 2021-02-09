@@ -226,14 +226,13 @@ discordClient.on('message', async (msg) => {
                     msg.reply('Already connected')
             }
         } else if (msg.content.trim().toLowerCase() == _CMD_LEAVE) {
-            voice_Connection.play('hero1.mp3', { volume: 1 });
             if (guildMap.has(mapKey)) {
                 let val = guildMap.get(mapKey);
                 if (val.voice_Channel) val.voice_Channel.leave()
                 if (val.voice_Connection) val.voice_Connection.disconnect()
                 if (val.musicYTStream) val.musicYTStream.destroy()
                     guildMap.delete(mapKey)
-                msg.reply("Disconnected.")
+                msg.reply("/tts Disconnected.")
             } else {
                 msg.reply("Cannot leave because not connected.")
             }
