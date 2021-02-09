@@ -284,16 +284,17 @@ discordClient.on('message', async (msg) => {
 function getHelpString() {
     let out = '**VOICE COMMANDS:**\n'
         out += '```'
-        out += 'music help\n'
-        out += 'music play [random, favorites, <genre> or query]\n'
-        out += 'music skip\n'
-        out += 'music pause/resume\n'
-        out += 'music shuffle\n'
-        out += 'music genres\n'
-        out += 'music set favorite\n'
-        out += 'music favorites\n'
-        out += 'music list\n'
-        out += 'music clear list\n';
+        out += 'melody help\n'
+        out += 'melody play [random, favorites, <genre> or query]\n'
+        out += 'melody skip\n'
+        out += 'melody pause/resume\n'
+        out += 'melody shuffle\n'
+        out += 'melody genres\n'
+        out += 'melody set favorite\n'
+        out += 'melody favorites\n'
+        out += 'melody leave/go away/ goodbye\n'
+        out += 'melody list\n'
+        out += 'melody clear list\n';
         out += '```'
 
         out += '**TEXT COMMANDS:**\n'
