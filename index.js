@@ -440,7 +440,7 @@ function process_commands_query(query, mapKey, userid) {
                     out = _CMD_LEAVE;
                 break;
             case 'hello':
-                out = 'hi there :)'
+                out = 'i am melody :)'
                 break;
             case 'favorites':
                 out = _CMD_FAVORITES;
