@@ -173,7 +173,7 @@ discordClient.on('ready', () => {
 })
 discordClient.login(DISCORD_TOK)
 
-const PREFIX = '!';
+const PREFIX = '.';
 const _CMD_HELP        = PREFIX + 'help';
 const _CMD_JOIN        = PREFIX + 'join';
 const _CMD_LEAVE       = PREFIX + 'leave';
@@ -431,7 +431,7 @@ function process_commands_query(query, mapKey, userid) {
                     out = _CMD_CLEAR;
                 break;
             case 'list':
-                out = _CMD_QUEUE;
+                    out = _CMD_QUEUE;
                 break;
             case 'leave':
                     out = _CMD_LEAVE;
