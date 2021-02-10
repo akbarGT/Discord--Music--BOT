@@ -204,6 +204,8 @@ const EMOJI_PLAY = '▶️'
 const EMOJI_NEXT = '⏭️'
 const EMOJI_MPLAY = '🎶'
 const EMOJI_RESUME = '⏯️'
+const EMOJI_SHUFFLE = '🔀'
+const EMOJI_Q = '✔️'
 
 
 const GENRES = {
@@ -539,7 +541,7 @@ async function music_message(message, mapKey) {
                         const arr = await youtube_tracks_from_playlist(qry);
                         for (let item of arr)
                             addToQueue(item, mapKey)
-                        message.react(EMOJI_GREEN_CIRCLE)
+                        message.react(EMOJI_PLAY)
                     } catch (e) {
                         console.log('music_message 476:' + e)
                         message.channel.send('Failed to process playlist: ' + qry);
@@ -547,7 +549,7 @@ async function music_message(message, mapKey) {
                 } else {
                     try {
                         addToQueue(qry, mapKey);
-                        message.react(EMOJI_GREEN_CIRCLE)
+                        message.react(EMOJI_PLAY)
                     } catch (e) {
                         console.log('music_message 484:' + e)
                         message.channel.send('Failed to find video for (try again): ' + qry);
@@ -581,7 +583,7 @@ async function music_message(message, mapKey) {
         } else if (args[0] == _CMD_SHUFFLE) {
 
             shuffleMusic(mapKey, ()=>{
-                message.react(EMOJI_GREEN_CIRCLE)
+                message.react(EMOJI_SHUFFLE)
             }, (msg)=>{
                 if (msg && msg.length) message.channel.send(msg);
             })
