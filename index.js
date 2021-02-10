@@ -424,7 +424,7 @@ function process_commands_query(query, mapKey, userid) {
                 if (args == 'list')
                     out = _CMD_CLEAR;
                 break;
-            case 'show playlist':
+            case 'show' + 'playlist':
                     out = _CMD_QUEUE;
                 break;
             case 'leave':
