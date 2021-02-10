@@ -286,16 +286,14 @@ function getHelpString() {
         out += '```'
         out += 'melody help\n'
         out += 'melody play [ Song name, favorites]\n'
-        out += 'melody skip\n'
-        out += 'melody pause/resume\n'
-        out += 'melody shuffle\n'
-        out += 'melody genres\n'
-        out += 'melody set favorite. To add currently playing song to Favorite playlist\n'
-        out += 'melody favorites\n'
-        out += 'melody goodbye\n'
-        out += 'melody leave/go away/ goodbye\n'
-        out += 'melody list\n'
-        out += 'melody clear list\n';
+        out += 'melody next/skip\n'
+        out += 'melody pause/stop\n'
+        out += 'melody resume\n'
+        out += 'melody set favorite. Add currently playing song to Favorites playlist\n'
+        out += 'melody show favorites\n'
+        out += 'melody disconnect / goodbye / leave\n'
+        out += 'melody show playlist\n'
+        out += 'melody clear playlist\n';
         out += '```'
 
         out += '**TEXT COMMANDS:**\n'
@@ -303,14 +301,11 @@ function getHelpString() {
         out += _CMD_HELP + '\n'
         out += _CMD_JOIN + '/' + _CMD_LEAVE + '\n'
         out += _CMD_PLAY + ' [query]\n'
-        out += _CMD_RANDOM + '\n'
         out += _CMD_PAUSE + '/' + _CMD_RESUME + '\n'
         out += _CMD_SKIP + '\n'
-        out += _CMD_SHUFFLE + '\n'
         out += _CMD_FAVORITE + '\n'
         out += _CMD_UNFAVORITE + ' [name]\n'
         out += _CMD_FAVORITES + '\n'
-        out += _CMD_GENRES + '\n'
         out += _CMD_QUEUE + '\n';
         out += _CMD_CLEAR + '\n';
         out += '```'
@@ -450,7 +445,7 @@ function process_commands_query(query, mapKey, userid) {
             case 'status':
                 out = 'I am online. All functions working.'
                 break;
-            case 'favorites':
+            case 'show favorites':
                 out = _CMD_FAVORITES;
                 break;
             case 'set':
