@@ -197,7 +197,7 @@ const PLAY_CMDS = [_CMD_PLAY, _CMD_PAUSE, _CMD_RESUME, _CMD_SHUFFLE, _CMD_SKIP, 
 
 const EMOJI_GREEN_CIRCLE = '🟢'
 const EMOJI_RED_CIRCLE = '🔴'
-const EMOJI_PAUSE = ':pause_button:'
+const EMOJI_PAUSE = '⏸️'
 
 const GENRES = {
     'hip-hop': ['hip-hop', 'hip hop', 'hiphop', 'rap'],
