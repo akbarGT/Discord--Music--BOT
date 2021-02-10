@@ -657,7 +657,7 @@ async function music_message(message, mapKey) {
         } else if (args[0] == _CMD_FAVORITE) {
 
             setAsFavorite(mapKey, ()=>{
-                message.react(EMOJI_GREEN_CIRCLE)
+                message.react(EMOJI_Q)
             }, (msg)=> {
                 if (msg && msg.length) message.channel.send(msg);
             })
@@ -676,7 +676,7 @@ async function music_message(message, mapKey) {
     }
     
     queueTryPlayNext(mapKey, (title)=>{
-        message.react(EMOJI_GREEN_CIRCLE);
+        message.react(EMOJI_PLAY);
         message.channel.send('Now playing: **' + title + '**')
     }, (msg)=>{
         if (msg && msg.length) message.channel.send(msg);
