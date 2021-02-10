@@ -285,41 +285,27 @@ function getHelpString() {
     let out = '**VOICE COMMANDS:**\n'
         out += '```'
         out += 'melody help\n'
-        out += 'melody play [random, favorites, <genre> or query]\n'
-        out += 'melody skip\n'
-        out += 'melody pause/resume\n'
-        out += 'melody shuffle\n'
-        out += 'melody genres\n'
-        out += 'melody set favorite. To add currently playing song to persnoal playlist\n'
-        out += 'melody favorites\n'
-        out += 'melody goodbye\n'
-        out += 'melody leave/go away/ goodbye\n'
-        out += 'melody list\n'
-        out += 'melody clear list\n';
+        out += 'melody play [ Song name, favorites]\n'
+        out += 'melody next/skip\n'
+        out += 'melody pause/stop\n'
+        out += 'melody resume\n'
+        out += 'melody set favorite. Add currently playing song to Favorites playlist\n'
+        out += 'melody show favorites\n'
+        out += 'melody disconnect / goodbye / leave\n'
+        out += 'melody show playlist\n'
+        out += 'melody clear playlist\n';
         out += '```'
 
         out += '**TEXT COMMANDS:**\n'
         out += '```'
         out += _CMD_HELP + '\n'
         out += _CMD_JOIN + '/' + _CMD_LEAVE + '\n'
-<<<<<<< Updated upstream
         out += _CMD_PLAY + ' [query]\n'
-        out += _CMD_GENRE + ' [name]\n'
-        out += _CMD_RANDOM + '\n'
         out += _CMD_PAUSE + '/' + _CMD_RESUME + '\n'
         out += _CMD_SKIP + '\n'
-        out += _CMD_SHUFFLE + '\n'
         out += _CMD_FAVORITE + '\n'
         out += _CMD_UNFAVORITE + ' [name]\n'
-=======
-        out += _CMD_PLAY + ' Song Name\n'
-        out += _CMD_PAUSE + '/' + _CMD_RESUME + '\n'
-        out += _CMD_SKIP + '\n'
-        out += _CMD_FAVORITE + 'Adds currently playing song to favorites\n'
-        out += _CMD_UNFAVORITE + ' Name\n'
->>>>>>> Stashed changes
         out += _CMD_FAVORITES + '\n'
-        out += _CMD_GENRES + '\n'
         out += _CMD_QUEUE + '\n';
         out += _CMD_CLEAR + '\n';
         out += '```'
@@ -434,19 +420,12 @@ function process_commands_query(query, mapKey, userid) {
             case 'resume':
                 out = _CMD_RESUME;
                 break;
-            case 'clear':
+            case 'clear playlist':
                 if (args == 'list')
                     out = _CMD_CLEAR;
                 break;
-            case 'clear playlist':
-                if (args == 'list')
-                out = _CMD_CLEAR;
-                break;
-            case 'show playlist':
-                out = _CMD_QUEUE;
-                break;
             case 'list':
-                out = _CMD_QUEUE;
+                    out = _CMD_QUEUE;
                 break;
             case 'leave':
                     out = _CMD_LEAVE;
@@ -454,16 +433,19 @@ function process_commands_query(query, mapKey, userid) {
             case 'goodbye':
                     out = _CMD_LEAVE;
                 break;
-            case 'fuck off':
+            case 'disconnect':
                     out = _CMD_LEAVE;
                 break;
-            case 'fuck of':
+            case 'fuck off':
                     out = _CMD_LEAVE;
                     break;
             case 'hello':
                 out = 'i am melody :)'
                 break;
-            case 'favorites':
+            case 'status':
+                out = 'I am online. All functions working.'
+                break;
+            case 'show favorites':
                 out = _CMD_FAVORITES;
                 break;
             case 'set':
