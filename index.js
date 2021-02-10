@@ -285,12 +285,12 @@ function getHelpString() {
     let out = '**VOICE COMMANDS:**\n'
         out += '```'
         out += 'melody help\n'
-        out += 'melody play [random, favorites, <genre> or query]\n'
+        out += 'melody play [ Song name, favorites]\n'
         out += 'melody skip\n'
         out += 'melody pause/resume\n'
         out += 'melody shuffle\n'
         out += 'melody genres\n'
-        out += 'melody set favorite. To add currently playing song to persnoal playlist\n'
+        out += 'melody set favorite. To add currently playing song to Favorite playlist\n'
         out += 'melody favorites\n'
         out += 'melody goodbye\n'
         out += 'melody leave/go away/ goodbye\n'
@@ -303,7 +303,6 @@ function getHelpString() {
         out += _CMD_HELP + '\n'
         out += _CMD_JOIN + '/' + _CMD_LEAVE + '\n'
         out += _CMD_PLAY + ' [query]\n'
-        out += _CMD_GENRE + ' [name]\n'
         out += _CMD_RANDOM + '\n'
         out += _CMD_PAUSE + '/' + _CMD_RESUME + '\n'
         out += _CMD_SKIP + '\n'
@@ -426,7 +425,7 @@ function process_commands_query(query, mapKey, userid) {
             case 'resume':
                 out = _CMD_RESUME;
                 break;
-            case 'clear':
+            case 'clear playlist':
                 if (args == 'list')
                     out = _CMD_CLEAR;
                 break;
@@ -439,14 +438,17 @@ function process_commands_query(query, mapKey, userid) {
             case 'goodbye':
                     out = _CMD_LEAVE;
                 break;
-            case 'fuck off':
+            case 'disconnect':
                     out = _CMD_LEAVE;
                 break;
-            case 'fuck of':
+            case 'fuck off':
                     out = _CMD_LEAVE;
                     break;
             case 'hello':
                 out = 'i am melody :)'
+                break;
+            case 'status':
+                out = 'I am online. All functions working.'
                 break;
             case 'favorites':
                 out = _CMD_FAVORITES;
