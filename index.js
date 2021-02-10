@@ -197,6 +197,7 @@ const PLAY_CMDS = [_CMD_PLAY, _CMD_PAUSE, _CMD_RESUME, _CMD_SHUFFLE, _CMD_SKIP, 
 
 const EMOJI_GREEN_CIRCLE = '🟢'
 const EMOJI_RED_CIRCLE = '🔴'
+const EMOJI_PAUSE = ':pause_button:'
 
 const GENRES = {
     'hip-hop': ['hip-hop', 'hip hop', 'hiphop', 'rap'],
@@ -557,7 +558,7 @@ async function music_message(message, mapKey) {
         } else if (args[0] == _CMD_PAUSE) {
 
             pauseMusic(mapKey, ()=>{
-                message.react(EMOJI_GREEN_CIRCLE)
+                message.react(EMOJI_PAUSE)
             }, (msg)=>{
                 if (msg && msg.length) message.channel.send(msg);
             })
