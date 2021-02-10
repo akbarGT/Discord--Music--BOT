@@ -258,7 +258,7 @@ discordClient.on('message', async (msg) => {
                 val.debug = true;
         }
         else if (msg.content.trim().toLowerCase() == _CMD_TEST) {
-            msg.reply('hello back =)')
+            msg.reply('Melody online. All functions working.')
         }
         else if (msg.content.split('\n')[0].split(' ')[0].trim().toLowerCase() == _CMD_LANG) {
             const lang = msg.content.replace(_CMD_LANG, '').trim().toLowerCase()
