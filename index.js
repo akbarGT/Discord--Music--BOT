@@ -195,9 +195,16 @@ const _CMD_TEST        = PREFIX + 'status';
 const _CMD_LANG        = PREFIX + 'lang';
 const PLAY_CMDS = [_CMD_PLAY, _CMD_PAUSE, _CMD_RESUME, _CMD_SHUFFLE, _CMD_SKIP, _CMD_GENRE, _CMD_GENRES, _CMD_RANDOM, _CMD_CLEAR, _CMD_QUEUE, _CMD_FAVORITE, _CMD_FAVORITES, _CMD_UNFAVORITE];
 
+//////Emojies////////
+
 const EMOJI_GREEN_CIRCLE = '🟢'
 const EMOJI_RED_CIRCLE = '🔴'
 const EMOJI_PAUSE = '⏸️'
+const EMOJI_PLAY = '▶️'
+const EMOJI_NEXT = '⏭️'
+const EMOJI_MPLAY = '🎶'
+const EMOJI_RESUME = '⏯️'
+
 
 const GENRES = {
     'hip-hop': ['hip-hop', 'hip hop', 'hiphop', 'rap'],
@@ -506,7 +513,7 @@ async function music_message(message, mapKey) {
                         for (let item of arr)     {
                             addToQueue(item, mapKey)
                         }
-                        message.react(EMOJI_GREEN_CIRCLE)
+                        message.react(EMOJI_PLAY)
                     } else {
                         message.channel.send('No favorites yet.')
                     }
@@ -550,7 +557,7 @@ async function music_message(message, mapKey) {
         } else if (args[0] == _CMD_SKIP) {
 
             skipMusic(mapKey, ()=>{
-                message.react(EMOJI_GREEN_CIRCLE)
+                message.react(EMOJI_NEXT)
             }, (msg)=>{
                 if (msg && msg.length) message.channel.send(msg);
             })
@@ -566,7 +573,7 @@ async function music_message(message, mapKey) {
         } else if (args[0] == _CMD_RESUME) {
 
             resumeMusic(mapKey, ()=>{
-                message.react(EMOJI_GREEN_CIRCLE)
+                message.react(EMOJI_RESUME)
             }, (msg)=>{
                 if (msg && msg.length) message.channel.send(msg);
             })
