@@ -420,8 +420,8 @@ function process_commands_query(query, mapKey, userid) {
             case 'resume':
                 out = _CMD_RESUME;
                 break;
-            case 'clear playlist':
-                if (args == 'list')
+            case 'clear':
+                if (args == 'playlist')
                     out = _CMD_CLEAR;
                 break;
             case 'show' + 'playlist':
