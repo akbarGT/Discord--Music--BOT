@@ -302,6 +302,7 @@ function getHelpString() {
         out += '```'
         out += _CMD_HELP + '\n'
         out += _CMD_JOIN + '/' + _CMD_LEAVE + '\n'
+<<<<<<< Updated upstream
         out += _CMD_PLAY + ' [query]\n'
         out += _CMD_GENRE + ' [name]\n'
         out += _CMD_RANDOM + '\n'
@@ -310,6 +311,13 @@ function getHelpString() {
         out += _CMD_SHUFFLE + '\n'
         out += _CMD_FAVORITE + '\n'
         out += _CMD_UNFAVORITE + ' [name]\n'
+=======
+        out += _CMD_PLAY + ' Song Name\n'
+        out += _CMD_PAUSE + '/' + _CMD_RESUME + '\n'
+        out += _CMD_SKIP + '\n'
+        out += _CMD_FAVORITE + 'Adds currently playing song to favorites\n'
+        out += _CMD_UNFAVORITE + ' Name\n'
+>>>>>>> Stashed changes
         out += _CMD_FAVORITES + '\n'
         out += _CMD_GENRES + '\n'
         out += _CMD_QUEUE + '\n';
@@ -429,6 +437,13 @@ function process_commands_query(query, mapKey, userid) {
             case 'clear':
                 if (args == 'list')
                     out = _CMD_CLEAR;
+                break;
+            case 'clear playlist':
+                if (args == 'list')
+                out = _CMD_CLEAR;
+                break;
+            case 'show playlist':
+                out = _CMD_QUEUE;
                 break;
             case 'list':
                 out = _CMD_QUEUE;
