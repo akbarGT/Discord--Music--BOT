@@ -207,6 +207,8 @@ const EMOJI_RESUME = '⏯️'
 const EMOJI_SHUFFLE = '🔀'
 const EMOJI_CLEAR = '🆑'
 const EMOJI_Q = '✔️'
+const EMOJI_HEART = '❤️'
+const EMOJI_LIST = '🧾'
 
 
 const GENRES = {
@@ -448,7 +450,8 @@ function process_commands_query(query, mapKey, userid) {
             case 'disconnect':
                     out = _CMD_LEAVE;
                 break;
-            case 'fuck off':
+            case 'fuck':
+                if (args == 'off')
                     out = _CMD_LEAVE;
                     break;
             case 'hello':
@@ -606,7 +609,7 @@ async function music_message(message, mapKey) {
                 console.log(chunk.length)
                 message.channel.send(chunk);
             }
-            message.react(EMOJI_GREEN_CIRCLE)
+            message.react(EMOJI_LIST)
 
         } else if (args[0] == _CMD_RANDOM) {
 
@@ -654,7 +657,7 @@ async function music_message(message, mapKey) {
                 const chunks = message_chunking(favs, DISCORD_MSG_LIMIT);
                 for (let chunk of chunks)
                     message.channel.send(chunk);
-                message.react(EMOJI_GREEN_CIRCLE)
+                message.react(EMOJI_HEART)
             }
 
         } else if (args[0] == _CMD_FAVORITE) {
@@ -669,7 +672,7 @@ async function music_message(message, mapKey) {
 
             const qry = args.slice(1).join(' ');
             unFavorite(qry, mapKey, ()=>{
-                message.react(EMOJI_GREEN_CIRCLE)
+                message.react(EMOJI_Q)
             }, (msg)=>{
                 if (msg && msg.length) message.channel.send(msg);
             })
