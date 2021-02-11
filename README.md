@@ -11,7 +11,7 @@ pm2 start ecosystem.config.js
 ```
 
 ## Usage
-By now you have a discord server, the DiscordBot is running and is a part of your server.
+By now you have a discord server.
 Make sure your server has a text and voice channel.
 
 1. Enter one of your voice channels.
@@ -53,14 +53,14 @@ A successful voice command looks like this:
 
 Here are some examples which may not work (properly):
 ```
-<talking> music skip
-music skip <talking>
-<talking> music skip <talking>
+<talking> melody skip
+melody skip <talking>
+<talking> melody skip <talking>
 ...
 
-music play 'the chemical brothers' <talking>
+melody play 'counting stars' <talking>
 
-music <long silence>  play  <long silence> 'the chemical brothers'
+music <long silence>  play  <long silence> 'counting stars'
 ```
 
 
