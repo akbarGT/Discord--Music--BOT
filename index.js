@@ -15,6 +15,7 @@ console.log = function () {
 
 
 const fs = require('fs');
+const discordClient = new Discord.Client()
 
 discordClient.commands = new Discord.Collection();
 
@@ -177,7 +178,7 @@ function updateWitAIAppLang(appID, lang, cb) {
 
 const Discord = require('discord.js')
 const DISCORD_MSG_LIMIT = 2000;
-const discordClient = new Discord.Client()
+
 discordClient.on('ready', () => {
     console.log(`Logged in as ${discordClient.user.tag}!`)
 })
