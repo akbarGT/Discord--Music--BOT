@@ -197,16 +197,6 @@ const _CMD_LANG        = PREFIX + 'lang';
 const PLAY_CMDS = [_CMD_PLAY, _CMD_PAUSE, _CMD_RESUME, _CMD_SHUFFLE, _CMD_SKIP, _CMD_GENRE, _CMD_GENRES, _CMD_RANDOM, _CMD_CLEAR, _CMD_QUEUE, _CMD_FAVORITE, _CMD_FAVORITES, _CMD_UNFAVORITE];
 
 
-/////NEW CM FOLDER/////
-//////////////////////
-
-discordClient.commands = new Discord.Collection();
-
-const commandFiles = fs.readdirSync('./commands/').filter(file => file.endsWith('.js'));
-for(const file of commandFiles){
-    const command = require(`./commands/${file}`);
-    discordClient.commands.set(command.name, command);
-}
 
 //////Emojies////////
 
@@ -306,6 +296,18 @@ discordClient.on('message', async (msg) => {
         msg.reply('Error#180: Something went wrong, try again or contact the developers if this keeps happening.');
     }
 })
+
+/////NEW CM FOLDER/////
+//////////////////////
+
+discordClient.commands = new Discord.Collection();
+
+const commandFiles = fs.readdirSync('./commands/').filter(file => file.endsWith('.js'));
+for(const file of commandFiles){
+    const command = require(`./commands/${file}`);
+    discordClient.commands.set(command.name, command);
+}
+/////////////////////////////////////
 
 function getHelpString() {
     let out = '**VOICE COMMANDS:**\n'
