@@ -173,6 +173,18 @@ discordClient.on('ready', () => {
 })
 discordClient.login(DISCORD_TOK)
 
+
+discordClient.commands = new Discord.Collection();
+
+const commandFiles = fs.readdirSync('./commands/').filter(file => file.endsWith('.js'));
+for(const file of commandFiles){
+    const command = require(`./commands/${file}`);
+    discordClient.commands.set(command.name, command);
+}
+/////////////////////////////////////
+/////NEW CM FOLDER/////
+//////////////////////
+
 const PREFIX = '!';
 const _CMD_HELP        = PREFIX + 'help';
 const _CMD_JOIN        = PREFIX + 'join';
@@ -296,18 +308,6 @@ discordClient.on('message', async (msg) => {
         msg.reply('Error#180: Something went wrong, try again or contact the developers if this keeps happening.');
     }
 })
-
-/////NEW CM FOLDER/////
-//////////////////////
-
-discordClient.commands = new Discord.Collection();
-
-const commandFiles = fs.readdirSync('./commands/').filter(file => file.endsWith('.js'));
-for(const file of commandFiles){
-    const command = require(`./commands/${file}`);
-    discordClient.commands.set(command.name, command);
-}
-/////////////////////////////////////
 
 function getHelpString() {
     let out = '**VOICE COMMANDS:**\n'
