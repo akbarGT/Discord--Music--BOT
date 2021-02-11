@@ -282,16 +282,19 @@ discordClient.on('message', async (msg) => {
             msg.channel.send('🟢 Melody online. All functions working.');
         }
         else if (msg.content.trim().toLowerCase() == _CMD_DEL) {
+            const messageArray = msg.content.split(' ');
+            const args1 = messageArray.slice(1);
+        
             if (!msg.member.permissions.has("MANAGE_MESSAGES")) return msg.channel.send('Lack of Perms!');
 
             let deleteAmount;
             
-            if (isNaN(args[0]) || parseInt(args[0]) <= 0) { return msg.reply('Please put a number only!') }
+            if (isNaN(args1[0]) || parseInt(args1[0]) <= 0) { return msg.reply('Please put a number only!') }
             
-            if (parseInt(args[0]) > 100) {
+            if (parseInt(args1[0]) > 100) {
                 return msg.reply('You can only delete 100 msgs at a time!')
             } else {
-                deleteAmount = parseInt(args[0]);
+                deleteAmount = parseInt(args1[0]);
             }
             
             msg.channel.bulkDelete(deleteAmount + 1, true);
