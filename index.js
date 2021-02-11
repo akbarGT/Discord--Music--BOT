@@ -277,6 +277,9 @@ discordClient.on('message', async (msg) => {
         else if (msg.content.trim().toLowerCase() == _CMD_PING) {
             msg.channel.send('pong!');
         }
+        else if (msg.content.trim().toLowerCase() == _CMD_TEST) {
+            msg.channel.send('🟢 Melody online. All functions working.');
+        }
         else if (msg.content.split('\n')[0].split(' ')[0].trim().toLowerCase() == _CMD_LANG) {
             const lang = msg.content.replace(_CMD_LANG, '').trim().toLowerCase()
             listWitAIApps(data => {
@@ -428,6 +431,9 @@ function process_commands_query(query, mapKey, userid) {
             case 'genres':
                 out = _CMD_GENRES;
                 break;
+                case 'pinf':
+                    out = _CMD_PING;
+                    break;
             case 'stop':
                 out = _CMD_PAUSE;
                 break;
