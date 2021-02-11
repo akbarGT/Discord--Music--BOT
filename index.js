@@ -15,6 +15,15 @@ console.log = function () {
 
 
 const fs = require('fs');
+
+client.commands = new Discord.Collection();
+
+const commandFiles = fs.readdirSync('./commands/').filter(file => file.endsWith('.js'));
+for(const file of commandFiles){
+    const command = require(`./commands/${file}`);
+    client.commands.set(command.name, command);
+}
+
 const util = require('util');
 const path = require('path');
 const request = require('request');
@@ -192,6 +201,7 @@ const _CMD_SKIP        = PREFIX + 'skip';
 const _CMD_QUEUE       = PREFIX + 'playlist';
 const _CMD_DEBUG       = PREFIX + 'debug';
 const _CMD_TEST        = PREFIX + 'status';
+const _CMD_PING        = PREFIX + 'ping';
 const _CMD_LANG        = PREFIX + 'lang';
 const PLAY_CMDS = [_CMD_PLAY, _CMD_PAUSE, _CMD_RESUME, _CMD_SHUFFLE, _CMD_SKIP, _CMD_GENRE, _CMD_GENRES, _CMD_RANDOM, _CMD_CLEAR, _CMD_QUEUE, _CMD_FAVORITE, _CMD_FAVORITES, _CMD_UNFAVORITE];
 
@@ -269,6 +279,9 @@ discordClient.on('message', async (msg) => {
                 val.debug = false;
             else
                 val.debug = true;
+        }
+        else if (msg.content.trim().toLowerCase() == _CMD_PING) {
+            client.commands.get('ping').execute(message, args);
         }
         else if (msg.content.trim().toLowerCase() == _CMD_TEST) {
             msg.reply('Melody online. All functions working.')
