@@ -205,6 +205,7 @@ const EMOJI_NEXT = '⏭️'
 const EMOJI_MPLAY = '🎶'
 const EMOJI_RESUME = '⏯️'
 const EMOJI_SHUFFLE = '🔀'
+const EMOJI_CLEAR = '🆑'
 const EMOJI_Q = '✔️'
 
 
@@ -591,7 +592,7 @@ async function music_message(message, mapKey) {
         } else if (args[0] == _CMD_CLEAR) {
 
             clearQueue(mapKey, ()=>{
-                message.react(EMOJI_GREEN_CIRCLE)
+                message.react(EMOJI_CLEAR)
             }, (msg)=>{
                 if (msg && msg.length) message.channel.send(msg);
             })
@@ -682,6 +683,7 @@ async function music_message(message, mapKey) {
         if (msg && msg.length) message.channel.send(msg);
     });
 }
+//////Above is the first song play emoji /////
 
 let GUILD_FAVORITES = {};
 const GUILD_FAVORITES_FILE = './data/guild_favorites.json';
