@@ -663,7 +663,7 @@ async function music_message(message, mapKey) {
         } else if (args[0] == _CMD_FAVORITE) {
 
             setAsFavorite(mapKey, ()=>{
-                message.react(EMOJI_Q)
+                message.react(EMOJI_HEART)
             }, (msg)=> {
                 if (msg && msg.length) message.channel.send(msg);
             })
