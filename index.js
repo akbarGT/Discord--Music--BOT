@@ -284,8 +284,7 @@ discordClient.on('message', async (msg) => {
         else if (msg.content.trim().toLowerCase() == _CMD_DEL10) {
             msg.channel.bulkDelete(11);
             msg.reply(`**Successfully** Deleted ***10*** Messages.`)
-            .then(msg =>
-                msg.delete(5000))
+            setTimeout(() => msg.delete(), 5000)
         }
         else if (msg.content.split('\n')[0].split(' ')[0].trim().toLowerCase() == _CMD_LANG) {
             const lang = msg.content.replace(_CMD_LANG, '').trim().toLowerCase()
