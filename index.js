@@ -282,11 +282,8 @@ discordClient.on('message', async (msg) => {
             msg.channel.send('🟢 Melody online. All functions working.');
         }
         else if (msg.content.trim().toLowerCase() == _CMD_DEL) {
-            let deleteAmount;
-                deleteAmount = 4
-            
-            msg.channel.bulkDelete(deleteAmount + 1, true);
-            msg.reply(`**Successfully** Deleted ***${deleteAmount}*** Messages.`)
+            msg.channel.bulkDelete(4);
+            msg.reply(`**Successfully** Deleted ***4*** Messages.`)
         }
         else if (msg.content.split('\n')[0].split(' ')[0].trim().toLowerCase() == _CMD_LANG) {
             const lang = msg.content.replace(_CMD_LANG, '').trim().toLowerCase()
