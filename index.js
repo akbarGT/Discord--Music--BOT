@@ -15,17 +15,6 @@ console.log = function () {
 
 
 const fs = require('fs');
-const discordClient = new Discord.Client()
-
-discordClient.commands = new Discord.Collection();
-
-
-const commandFiles = fs.readdirSync('./commands/').filter(file => file.endsWith('.js'));
-for(const file of commandFiles){
-    const command = require(`./commands/${file}`);
-    discordClient.commands.set(command.name, command);
-}
-
 const util = require('util');
 const path = require('path');
 const request = require('request');
@@ -178,7 +167,7 @@ function updateWitAIAppLang(appID, lang, cb) {
 
 const Discord = require('discord.js')
 const DISCORD_MSG_LIMIT = 2000;
-
+const discordClient = new Discord.Client()
 discordClient.on('ready', () => {
     console.log(`Logged in as ${discordClient.user.tag}!`)
 })
@@ -206,6 +195,18 @@ const _CMD_TEST        = PREFIX + 'status';
 const _CMD_PING        = PREFIX + 'ping';
 const _CMD_LANG        = PREFIX + 'lang';
 const PLAY_CMDS = [_CMD_PLAY, _CMD_PAUSE, _CMD_RESUME, _CMD_SHUFFLE, _CMD_SKIP, _CMD_GENRE, _CMD_GENRES, _CMD_RANDOM, _CMD_CLEAR, _CMD_QUEUE, _CMD_FAVORITE, _CMD_FAVORITES, _CMD_UNFAVORITE];
+
+
+/////NEW CM FOLDER/////
+//////////////////////
+
+discordClient.commands = new Discord.Collection();
+
+const commandFiles = fs.readdirSync('./commands/').filter(file => file.endsWith('.js'));
+for(const file of commandFiles){
+    const command = require(`./commands/${file}`);
+    discordClient.commands.set(command.name, command);
+}
 
 //////Emojies////////
 
@@ -281,9 +282,6 @@ discordClient.on('message', async (msg) => {
                 val.debug = false;
             else
                 val.debug = true;
-        }
-        else if (msg.content.trim().toLowerCase() == _CMD_PING) {
-            client.commands.get('ping').execute(message, args);
         }
         else if (msg.content.trim().toLowerCase() == _CMD_TEST) {
             msg.reply('Melody online. All functions working.')
