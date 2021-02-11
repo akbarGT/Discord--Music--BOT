@@ -456,7 +456,8 @@ function process_commands_query(query, mapKey, userid) {
             case 'status':
                 out = 'I am online. All functions working.'
                 break;
-            case 'show favorites':
+            case 'show':
+                if (args == 'favorites')
                 out = _CMD_FAVORITES;
                 break;
             case 'set':
