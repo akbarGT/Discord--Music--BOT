@@ -193,7 +193,7 @@ const _CMD_SKIP        = PREFIX + 'skip';
 const _CMD_QUEUE       = PREFIX + 'playlist';
 const _CMD_DEBUG       = PREFIX + 'debug';
 const _CMD_TEST        = PREFIX + 'status';
-const _CMD_DEL         = PREFIX + 'del';
+const _CMD_DEL10       = PREFIX + 'delete10';
 const _CMD_PING        = PREFIX + 'ping';
 const _CMD_LANG        = PREFIX + 'lang';
 const PLAY_CMDS = [_CMD_PLAY, _CMD_PAUSE, _CMD_RESUME, _CMD_SHUFFLE, _CMD_SKIP, _CMD_GENRE, _CMD_GENRES, _CMD_RANDOM, _CMD_CLEAR, _CMD_QUEUE, _CMD_FAVORITE, _CMD_FAVORITES, _CMD_UNFAVORITE];
@@ -281,9 +281,9 @@ discordClient.on('message', async (msg) => {
         else if (msg.content.trim().toLowerCase() == _CMD_TEST) {
             msg.channel.send('🟢 Melody online. All functions working.');
         }
-        else if (msg.content.trim().toLowerCase() == _CMD_DEL) {
-            msg.channel.bulkDelete(4);
-            msg.reply(`**Successfully** Deleted ***4*** Messages.`)
+        else if (msg.content.trim().toLowerCase() == _CMD_DEL10) {
+            msg.channel.bulkDelete(11);
+            msg.reply(`**Successfully** Deleted ***10*** Messages.`)
         }
         else if (msg.content.split('\n')[0].split(' ')[0].trim().toLowerCase() == _CMD_LANG) {
             const lang = msg.content.replace(_CMD_LANG, '').trim().toLowerCase()
