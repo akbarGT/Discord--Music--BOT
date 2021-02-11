@@ -174,17 +174,6 @@ discordClient.on('ready', () => {
 discordClient.login(DISCORD_TOK)
 
 
-discordClient.commands = new Discord.Collection();
-
-const commandFiles = fs.readdirSync('./commands/').filter(file => file.endsWith('.js'));
-for(const file of commandFiles){
-    const command = require(`./commands/${file}`);
-    discordClient.commands.set(command.name, command);
-}
-/////////////////////////////////////
-/////NEW CM FOLDER/////
-//////////////////////
-
 const PREFIX = '!';
 const _CMD_HELP        = PREFIX + 'help';
 const _CMD_JOIN        = PREFIX + 'join';
@@ -286,7 +275,7 @@ discordClient.on('message', async (msg) => {
                 val.debug = true;
         }
         else if (msg.content.trim().toLowerCase() == _CMD_PING) {
-            client.commands.get('ping').execute(message, args);
+            message.channel.send('pong!');
         }
         else if (msg.content.split('\n')[0].split(' ')[0].trim().toLowerCase() == _CMD_LANG) {
             const lang = msg.content.replace(_CMD_LANG, '').trim().toLowerCase()
