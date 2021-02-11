@@ -193,6 +193,7 @@ const _CMD_SKIP        = PREFIX + 'skip';
 const _CMD_QUEUE       = PREFIX + 'playlist';
 const _CMD_DEBUG       = PREFIX + 'debug';
 const _CMD_TEST        = PREFIX + 'status';
+const _CMD_DEL         = PREFIX + 'del';
 const _CMD_PING        = PREFIX + 'ping';
 const _CMD_LANG        = PREFIX + 'lang';
 const PLAY_CMDS = [_CMD_PLAY, _CMD_PAUSE, _CMD_RESUME, _CMD_SHUFFLE, _CMD_SKIP, _CMD_GENRE, _CMD_GENRES, _CMD_RANDOM, _CMD_CLEAR, _CMD_QUEUE, _CMD_FAVORITE, _CMD_FAVORITES, _CMD_UNFAVORITE];
@@ -279,6 +280,22 @@ discordClient.on('message', async (msg) => {
         }
         else if (msg.content.trim().toLowerCase() == _CMD_TEST) {
             msg.channel.send('🟢 Melody online. All functions working.');
+        }
+        else if (msg.content.trim().toLowerCase() == _CMD_DEL) {
+            if (!msg.member.permissions.has("MANAGE_MESSAGES")) return msg.channel.send('Lack of Perms!');
+
+            let deleteAmount;
+            
+            if (isNaN(args[0]) || parseInt(args[0]) <= 0) { return msg.reply('Please put a number only!') }
+            
+            if (parseInt(args[0]) > 100) {
+                return msg.reply('You can only delete 100 msgs at a time!')
+            } else {
+                deleteAmount = parseInt(args[0]);
+            }
+            
+            msg.channel.bulkDelete(deleteAmount + 1, true);
+            msg.reply(`**Successfully** Deleted ***${deleteAmount}*** Messages.`)
         }
         else if (msg.content.split('\n')[0].split(' ')[0].trim().toLowerCase() == _CMD_LANG) {
             const lang = msg.content.replace(_CMD_LANG, '').trim().toLowerCase()
