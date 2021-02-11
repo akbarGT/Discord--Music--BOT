@@ -597,7 +597,7 @@ async function music_message(message, mapKey) {
         } else if (args[0] == _CMD_CLEAR) {
 
             clearQueue(mapKey, ()=>{
-                message.react(EMOJI_CLEAR)
+                message.react(EMOJI_Q)
             }, (msg)=>{
                 if (msg && msg.length) message.channel.send(msg);
             })
