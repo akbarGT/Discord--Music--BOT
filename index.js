@@ -284,7 +284,7 @@ discordClient.on('message', async (msg) => {
         else if (msg.content.trim().toLowerCase() == _CMD_DEL10) {
             msg.channel.bulkDelete(11);
             msg.reply(`**Successfully** Deleted ***10*** Messages.`)
-            setTimeout(() => msg.delete(), 5000)
+            ///setTimeout(() => msg.delete(), 5000)
         }
         else if (msg.content.split('\n')[0].split(' ')[0].trim().toLowerCase() == _CMD_LANG) {
             const lang = msg.content.replace(_CMD_LANG, '').trim().toLowerCase()
@@ -304,8 +304,8 @@ discordClient.on('message', async (msg) => {
     } catch (e) {
         console.log('discordClient message: ' + e)
         msg.reply('Error#180: Something went wrong, try again or contact the developers if this keeps happening.')
-        .then(msg =>
-            msg.delete(10000))
+      //  .then(msg =>
+      //      msg.delete(10000))
     }
 })
 
