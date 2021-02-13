@@ -167,7 +167,9 @@ function updateWitAIAppLang(appID, lang, cb) {
 
 const Discord = require('discord.js')
 const DISCORD_MSG_LIMIT = 2000;
-const discordClient = new Discord.Client()
+
+const discordClient = new Discord.Client();
+
 discordClient.on('ready', () => {
     console.log(`Logged in as ${discordClient.user.tag}!`)
 })
@@ -193,7 +195,8 @@ const _CMD_SKIP        = PREFIX + 'skip';
 const _CMD_QUEUE       = PREFIX + 'playlist';
 const _CMD_DEBUG       = PREFIX + 'debug';
 const _CMD_TEST        = PREFIX + 'status';
-const _CMD_DEL10       = PREFIX + 'delete10';
+const _CMD_CLEAN       = PREFIX + 'clean';
+const _CMD_DEL         = PREFIX + 'del';
 const _CMD_PING        = PREFIX + 'ping';
 const _CMD_LANG        = PREFIX + 'lang';
 const PLAY_CMDS = [_CMD_PLAY, _CMD_PAUSE, _CMD_RESUME, _CMD_SHUFFLE, _CMD_SKIP, _CMD_GENRE, _CMD_GENRES, _CMD_RANDOM, _CMD_CLEAR, _CMD_QUEUE, _CMD_FAVORITE, _CMD_FAVORITES, _CMD_UNFAVORITE];
@@ -275,16 +278,29 @@ discordClient.on('message', async (msg) => {
             else
                 val.debug = true;
         }
-        else if (msg.content.trim().toLowerCase() == _CMD_PING) {
-            msg.channel.send('pong!');
-        }
+        // else if (msg.content.trim().toLowerCase() == _CMD_PING) {
+        //     msg.channel.send('pong! ');
+        // }
         else if (msg.content.trim().toLowerCase() == _CMD_TEST) {
             msg.channel.send('🟢 Melody online. All functions working.');
         }
-        else if (msg.content.trim().toLowerCase() == _CMD_DEL10) {
-            msg.channel.bulkDelete(11);
-            msg.reply(`**Successfully** Deleted ***10*** Messages.`)
+        else if (msg.content.trim().toLowerCase() == _CMD_CLEAN) {
+            if (!msg.member.permissions.has("MANAGE_MESSAGES")) return msg.channel.send('Insufficient Permissions');
+            msg.channel.bulkDelete(100);
+            msg.reply('100 Messages Deleted Successfully.', {timeout: 5000})
+            //.then(msg => msg.delete(3000));
             ///setTimeout(() => msg.delete(), 5000)
+        }
+        ////////Seperate Commands////////
+        else if (!msg.content.startsWith(PREFIX));
+    
+        const args2 = msg.content.slice(PREFIX.length).split(/ +/);
+        const command = args2.shift().toLowerCase();
+    
+        if(command === 'pekk'){
+            discordClient.commands.get('pekk').execute(msg, args2);
+        } else if (command === 'pann'){
+            discordClient.commands.get('ping').execute(msg, args2);
         }
         else if (msg.content.split('\n')[0].split(' ')[0].trim().toLowerCase() == _CMD_LANG) {
             const lang = msg.content.replace(_CMD_LANG, '').trim().toLowerCase()
@@ -439,7 +455,7 @@ function process_commands_query(query, mapKey, userid) {
             case 'genres':
                 out = _CMD_GENRES;
                 break;
-                case 'ping':
+                case 'king':
                     out = _CMD_PING;
                     break;
             case 'stop':
@@ -1111,6 +1127,7 @@ load_yt_cache();
 //////////////// SPOTIFY /////////////////
 //////////////////////////////////////////
 const Spotify = require('node-spotify-api');
+
 const spotifyClient = new Spotify({
     id: SPOTIFY_TOKEN_ID,
     secret: SPOTIFY_TOKEN_SECRET
@@ -1200,6 +1217,14 @@ async function spotify_tracks_from_playlist(spotifyurl) {
         });
 
     return arr;
+}
+
+discordClient.commands = new Discord.Collection();
+
+const commandFiles = fs.readdirSync('./commands/').filter(file => file.endsWith('.js'));
+for(const file of commandFiles){
+    const command = require(`./commands/${file}`);
+    discordClient.commands.set(command.name, command);
 }
 //////////////////////////////////////////
 //////////////////////////////////////////
