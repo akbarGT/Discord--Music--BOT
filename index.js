@@ -173,7 +173,7 @@ discordClient.on('ready', () => {
 })
 discordClient.login(DISCORD_TOK)
 
-const PREFIX = '.';
+const PREFIX = '!';
 const _CMD_HELP        = PREFIX + 'help';
 const _CMD_JOIN        = PREFIX + 'join';
 const _CMD_LEAVE       = PREFIX + 'leave';
@@ -189,14 +189,27 @@ const _CMD_GENRES      = PREFIX + 'genres';
 const _CMD_CLEAR       = PREFIX + 'clear';
 const _CMD_RANDOM      = PREFIX + 'random';
 const _CMD_SKIP        = PREFIX + 'skip';
-const _CMD_QUEUE       = PREFIX + 'list';
+const _CMD_QUEUE       = PREFIX + 'playlist';
 const _CMD_DEBUG       = PREFIX + 'debug';
-const _CMD_TEST        = PREFIX + 'hello';
+const _CMD_TEST        = PREFIX + 'status';
 const _CMD_LANG        = PREFIX + 'lang';
 const PLAY_CMDS = [_CMD_PLAY, _CMD_PAUSE, _CMD_RESUME, _CMD_SHUFFLE, _CMD_SKIP, _CMD_GENRE, _CMD_GENRES, _CMD_RANDOM, _CMD_CLEAR, _CMD_QUEUE, _CMD_FAVORITE, _CMD_FAVORITES, _CMD_UNFAVORITE];
 
+//////Emojies////////
+
 const EMOJI_GREEN_CIRCLE = '🟢'
 const EMOJI_RED_CIRCLE = '🔴'
+const EMOJI_PAUSE = '⏸️'
+const EMOJI_PLAY = '▶️'
+const EMOJI_NEXT = '⏭️'
+const EMOJI_MPLAY = '🎶'
+const EMOJI_RESUME = '⏯️'
+const EMOJI_SHUFFLE = '🔀'
+const EMOJI_CLEAR = '🆑'
+const EMOJI_Q = '✔️'
+const EMOJI_HEART = '❤️'
+const EMOJI_LIST = '🧾'
+
 
 const GENRES = {
     'hip-hop': ['hip-hop', 'hip hop', 'hiphop', 'rap'],
@@ -232,7 +245,8 @@ discordClient.on('message', async (msg) => {
                 if (val.voice_Connection) val.voice_Connection.disconnect()
                 if (val.musicYTStream) val.musicYTStream.destroy()
                     guildMap.delete(mapKey)
-                msg.reply("Disconnected.")
+                msg.reply(" ")
+                msg.channel.send("Disconnected", {tts:true})
             } else {
                 msg.reply("Cannot leave because not connected.")
             }
@@ -257,7 +271,7 @@ discordClient.on('message', async (msg) => {
                 val.debug = true;
         }
         else if (msg.content.trim().toLowerCase() == _CMD_TEST) {
-            msg.reply('hello back =)')
+            msg.reply('Melody online. All functions working.')
         }
         else if (msg.content.split('\n')[0].split(' ')[0].trim().toLowerCase() == _CMD_LANG) {
             const lang = msg.content.replace(_CMD_LANG, '').trim().toLowerCase()
@@ -283,16 +297,16 @@ discordClient.on('message', async (msg) => {
 function getHelpString() {
     let out = '**VOICE COMMANDS:**\n'
         out += '```'
-        out += 'music help\n'
-        out += 'music play [random, favorites, <genre> or query]\n'
-        out += 'music skip\n'
-        out += 'music pause/resume\n'
-        out += 'music shuffle\n'
-        out += 'music genres\n'
-        out += 'music set favorite\n'
-        out += 'music favorites\n'
-        out += 'music list\n'
-        out += 'music clear list\n';
+        out += 'melody help\n'
+        out += 'melody play [ Song name, favorites]\n'
+        out += 'melody next/skip\n'
+        out += 'melody pause/stop\n'
+        out += 'melody resume\n'
+        out += 'melody set favorite. Add currently playing song to Favorites playlist\n'
+        out += 'melody show favorites\n'
+        out += 'melody disconnect / goodbye / leave\n'
+        out += 'melody show playlist\n'
+        out += 'melody clear playlist\n';
         out += '```'
 
         out += '**TEXT COMMANDS:**\n'
@@ -300,15 +314,11 @@ function getHelpString() {
         out += _CMD_HELP + '\n'
         out += _CMD_JOIN + '/' + _CMD_LEAVE + '\n'
         out += _CMD_PLAY + ' [query]\n'
-        out += _CMD_GENRE + ' [name]\n'
-        out += _CMD_RANDOM + '\n'
         out += _CMD_PAUSE + '/' + _CMD_RESUME + '\n'
         out += _CMD_SKIP + '\n'
-        out += _CMD_SHUFFLE + '\n'
         out += _CMD_FAVORITE + '\n'
         out += _CMD_UNFAVORITE + ' [name]\n'
         out += _CMD_FAVORITES + '\n'
-        out += _CMD_GENRES + '\n'
         out += _CMD_QUEUE + '\n';
         out += _CMD_CLEAR + '\n';
         out += '```'
@@ -322,7 +332,7 @@ async function connect(msg, mapKey) {
         let text_Channel = await discordClient.channels.fetch(msg.channel.id);
         if (!text_Channel) return msg.reply("Error: The text channel does not exist!");
         let voice_Connection = await voice_Channel.join();
-        voice_Connection.play('sound.mp3', { volume: 0.5 });
+        voice_Connection.play('hero2.mp3', { volume: 1 });
         guildMap.set(mapKey, {
             'text_Channel': text_Channel,
             'voice_Channel': voice_Channel,
@@ -424,24 +434,34 @@ function process_commands_query(query, mapKey, userid) {
                 out = _CMD_RESUME;
                 break;
             case 'clear':
-                if (args == 'list')
+                if (args == 'playlist')
                     out = _CMD_CLEAR;
                 break;
-            case 'list':
-                out = _CMD_QUEUE;
+            case 'show':
+                if (args == 'playlist')
+                    out = _CMD_QUEUE;
                 break;
             case 'leave':
                     out = _CMD_LEAVE;
+                    break;
             case 'goodbye':
                     out = _CMD_LEAVE;
                 break;
-            case 'go away':
+            case 'disconnect':
                     out = _CMD_LEAVE;
                 break;
+            case 'fuck':
+                if (args == 'off')
+                    out = _CMD_LEAVE;
+                    break;
             case 'hello':
-                out = 'hi there :)'
+                out = 'i am melody :)'
                 break;
-            case 'favorites':
+            case 'status':
+                out = 'I am online. All functions working.'
+                break;
+            case 'show':
+                if (args == 'favorites')
                 out = _CMD_FAVORITES;
                 break;
             case 'set':
@@ -501,7 +521,7 @@ async function music_message(message, mapKey) {
                         for (let item of arr)     {
                             addToQueue(item, mapKey)
                         }
-                        message.react(EMOJI_GREEN_CIRCLE)
+                        message.react(EMOJI_PLAY)
                     } else {
                         message.channel.send('No favorites yet.')
                     }
@@ -527,7 +547,7 @@ async function music_message(message, mapKey) {
                         const arr = await youtube_tracks_from_playlist(qry);
                         for (let item of arr)
                             addToQueue(item, mapKey)
-                        message.react(EMOJI_GREEN_CIRCLE)
+                        message.react(EMOJI_PLAY)
                     } catch (e) {
                         console.log('music_message 476:' + e)
                         message.channel.send('Failed to process playlist: ' + qry);
@@ -535,7 +555,7 @@ async function music_message(message, mapKey) {
                 } else {
                     try {
                         addToQueue(qry, mapKey);
-                        message.react(EMOJI_GREEN_CIRCLE)
+                        message.react(EMOJI_PLAY)
                     } catch (e) {
                         console.log('music_message 484:' + e)
                         message.channel.send('Failed to find video for (try again): ' + qry);
@@ -545,7 +565,7 @@ async function music_message(message, mapKey) {
         } else if (args[0] == _CMD_SKIP) {
 
             skipMusic(mapKey, ()=>{
-                message.react(EMOJI_GREEN_CIRCLE)
+                message.react(EMOJI_NEXT)
             }, (msg)=>{
                 if (msg && msg.length) message.channel.send(msg);
             })
@@ -553,7 +573,7 @@ async function music_message(message, mapKey) {
         } else if (args[0] == _CMD_PAUSE) {
 
             pauseMusic(mapKey, ()=>{
-                message.react(EMOJI_GREEN_CIRCLE)
+                message.react(EMOJI_PAUSE)
             }, (msg)=>{
                 if (msg && msg.length) message.channel.send(msg);
             })
@@ -561,7 +581,7 @@ async function music_message(message, mapKey) {
         } else if (args[0] == _CMD_RESUME) {
 
             resumeMusic(mapKey, ()=>{
-                message.react(EMOJI_GREEN_CIRCLE)
+                message.react(EMOJI_RESUME)
             }, (msg)=>{
                 if (msg && msg.length) message.channel.send(msg);
             })
@@ -569,7 +589,7 @@ async function music_message(message, mapKey) {
         } else if (args[0] == _CMD_SHUFFLE) {
 
             shuffleMusic(mapKey, ()=>{
-                message.react(EMOJI_GREEN_CIRCLE)
+                message.react(EMOJI_SHUFFLE)
             }, (msg)=>{
                 if (msg && msg.length) message.channel.send(msg);
             })
@@ -577,7 +597,7 @@ async function music_message(message, mapKey) {
         } else if (args[0] == _CMD_CLEAR) {
 
             clearQueue(mapKey, ()=>{
-                message.react(EMOJI_GREEN_CIRCLE)
+                message.react(EMOJI_Q)
             }, (msg)=>{
                 if (msg && msg.length) message.channel.send(msg);
             })
@@ -589,7 +609,7 @@ async function music_message(message, mapKey) {
                 console.log(chunk.length)
                 message.channel.send(chunk);
             }
-            message.react(EMOJI_GREEN_CIRCLE)
+            message.react(EMOJI_LIST)
 
         } else if (args[0] == _CMD_RANDOM) {
 
@@ -637,13 +657,13 @@ async function music_message(message, mapKey) {
                 const chunks = message_chunking(favs, DISCORD_MSG_LIMIT);
                 for (let chunk of chunks)
                     message.channel.send(chunk);
-                message.react(EMOJI_GREEN_CIRCLE)
+                message.react(EMOJI_HEART)
             }
 
         } else if (args[0] == _CMD_FAVORITE) {
 
             setAsFavorite(mapKey, ()=>{
-                message.react(EMOJI_GREEN_CIRCLE)
+                message.react(EMOJI_HEART)
             }, (msg)=> {
                 if (msg && msg.length) message.channel.send(msg);
             })
@@ -652,7 +672,7 @@ async function music_message(message, mapKey) {
 
             const qry = args.slice(1).join(' ');
             unFavorite(qry, mapKey, ()=>{
-                message.react(EMOJI_GREEN_CIRCLE)
+                message.react(EMOJI_Q)
             }, (msg)=>{
                 if (msg && msg.length) message.channel.send(msg);
             })
@@ -662,12 +682,13 @@ async function music_message(message, mapKey) {
     }
     
     queueTryPlayNext(mapKey, (title)=>{
-        message.react(EMOJI_GREEN_CIRCLE);
+        message.react(EMOJI_PLAY);
         message.channel.send('Now playing: **' + title + '**')
     }, (msg)=>{
         if (msg && msg.length) message.channel.send(msg);
     });
 }
+//////Above is the first song play emoji /////
 
 let GUILD_FAVORITES = {};
 const GUILD_FAVORITES_FILE = './data/guild_favorites.json';
