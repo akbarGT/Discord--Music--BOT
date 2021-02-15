@@ -3,7 +3,7 @@ module.exports = {
     name: 'rbmc',
     description: "Reaction Base Music Controls!",
     async execute(message, args2, discordClient, _CMD_JOIN, _CMD_HELP, _CMD_PAUSE, _CMD_PLAY, _CMD_SKIP, args) {
-        const channel = '810583219598524457';
+        const channel = '466490227947470858';
         //const yellow = message.guild.roles.cache.find(role => role.name === "yellow");
         //const blue = message.guild.roles.cache.find(role => role.name === "blue");
  
