@@ -335,7 +335,7 @@ discordClient.on('message', async (msg) => {
             discordClient.commands.get('kick').execute(msg, args2);
         } else if (command === 'ban') {
             discordClient.commands.get('ban').execute(msg, args2);
-        } else if (command === 'setstatus') {
+        } else if (command === 'melodystatus') {
             discordClient.commands.get('setstatus').execute(msg, args2, discordClient);
         } else if (command === 'serverinfo') {
             discordClient.commands.get('serverinfo').execute(msg, args2, discordClient);
