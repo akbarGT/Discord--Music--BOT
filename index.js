@@ -768,13 +768,13 @@ async function music_message(message, mapKey) {
 
     queueTryPlayNext(mapKey, (title) => {
         message.react(EMOJI_PLAY);
+        message.channel.bulkDelete(2, true)
         message.channel.send('Now playing: **' + title + '**', { tts: true })
         .then(msg => {
             msg.delete({
                 timeout: 1000 * 25
             })
         });
-        message.channel.bulkDelete(2, true)
         message.channel.send(`.rr`)
         .then(msg => {
             msg.delete({
