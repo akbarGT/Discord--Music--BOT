@@ -771,7 +771,7 @@ async function music_message(message, mapKey) {
         message.channel.send('Now playing: **' + title + '**', { tts: true })
         .then(msg => {
             msg.delete({
-                timeout: 1000 * 25
+                timeout: 1000 * 15
             })
         });
     }, (msg) => {
