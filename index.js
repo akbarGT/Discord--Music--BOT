@@ -25,7 +25,7 @@ const { Readable } = require('stream');
 //////////////////////////////////////////
 
 function necessary_dirs() {
-    if (!fs.existsSync('./data/')){
+    if (!fs.existsSync('./data/')) {
         fs.mkdirSync('./data/');
     }
 }
@@ -40,19 +40,19 @@ function shuffle(a) {
 }
 
 function sleep(ms) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
+    return new Promise((resolve) => {
+        setTimeout(resolve, ms);
+    });
 }
 
 async function convert_audio(input) {
     try {
         // stereo to mono channel
         const data = new Int16Array(input)
-        const ndata = new Int16Array(data.length/2)
-        for (let i = 0, j = 0; i < data.length; i+=4) {
+        const ndata = new Int16Array(data.length / 2)
+        for (let i = 0, j = 0; i < data.length; i += 4) {
             ndata[j++] = data[i]
-            ndata[j++] = data[i+1]
+            ndata[j++] = data[i + 1]
         }
         return Buffer.from(ndata);
     } catch (e) {
@@ -73,13 +73,13 @@ async function convert_audio(input) {
 const SETTINGS_FILE = 'settings.json';
 
 let DISCORD_TOK = null;
-let WITAPIKEY = null; 
+let WITAPIKEY = null;
 let SPOTIFY_TOKEN_ID = null;
 let SPOTIFY_TOKEN_SECRET = null;
 
 function loadConfig() {
     if (fs.existsSync(SETTINGS_FILE)) {
-        const CFG_DATA = JSON.parse( fs.readFileSync(SETTINGS_FILE, 'utf8') );
+        const CFG_DATA = JSON.parse(fs.readFileSync(SETTINGS_FILE, 'utf8'));
         DISCORD_TOK = CFG_DATA.discord_token;
         WITAPIKEY = CFG_DATA.wit_ai_token;
         SPOTIFY_TOKEN_ID = CFG_DATA.spotify_token_id;
@@ -92,7 +92,7 @@ function loadConfig() {
     }
     if (!DISCORD_TOK || !WITAPIKEY)
         throw 'failed loading config #113 missing keys!'
-    
+
 }
 loadConfig()
 
@@ -100,61 +100,61 @@ loadConfig()
 const https = require('https')
 function listWitAIApps(cb) {
     const options = {
-      hostname: 'api.wit.ai',
-      port: 443,
-      path: '/apps?offset=0&limit=100',
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer '+WITAPIKEY,
-      },
+        hostname: 'api.wit.ai',
+        port: 443,
+        path: '/apps?offset=0&limit=100',
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + WITAPIKEY,
+        },
     }
 
     const req = https.request(options, (res) => {
-      res.setEncoding('utf8');
-      let body = ''
-      res.on('data', (chunk) => {
-        body += chunk
-      });
-      res.on('end',function() {
-        cb(JSON.parse(body))
-      })
+        res.setEncoding('utf8');
+        let body = ''
+        res.on('data', (chunk) => {
+            body += chunk
+        });
+        res.on('end', function () {
+            cb(JSON.parse(body))
+        })
     })
 
     req.on('error', (error) => {
-      console.error(error)
-      cb(null)
+        console.error(error)
+        cb(null)
     })
     req.end()
 }
 function updateWitAIAppLang(appID, lang, cb) {
     const options = {
-      hostname: 'api.wit.ai',
-      port: 443,
-      path: '/apps/' + appID,
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer '+WITAPIKEY,
-      },
+        hostname: 'api.wit.ai',
+        port: 443,
+        path: '/apps/' + appID,
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + WITAPIKEY,
+        },
     }
     const data = JSON.stringify({
-      lang
+        lang
     })
 
     const req = https.request(options, (res) => {
-      res.setEncoding('utf8');
-      let body = ''
-      res.on('data', (chunk) => {
-        body += chunk
-      });
-      res.on('end',function() {
-        cb(JSON.parse(body))
-      })
+        res.setEncoding('utf8');
+        let body = ''
+        res.on('data', (chunk) => {
+            body += chunk
+        });
+        res.on('end', function () {
+            cb(JSON.parse(body))
+        })
     })
     req.on('error', (error) => {
-      console.error(error)
-      cb(null)
+        console.error(error)
+        cb(null)
     })
     req.write(data)
     req.end()
@@ -163,40 +163,61 @@ function updateWitAIAppLang(appID, lang, cb) {
 //////////////////////////////////////////
 //////////////////////////////////////////
 //////////////////////////////////////////
-
+////////////////
 
 const Discord = require('discord.js')
 const DISCORD_MSG_LIMIT = 2000;
-const discordClient = new Discord.Client()
+
+const discordClient = new Discord.Client({ partials: ["MESSAGE", "CHANNEL", "REACTION"] });
+
 discordClient.on('ready', () => {
     console.log(`Logged in as ${discordClient.user.tag}!`)
 })
 discordClient.login(DISCORD_TOK)
 
+
 const PREFIX = '.';
-const _CMD_HELP        = PREFIX + 'help';
-const _CMD_JOIN        = PREFIX + 'join';
-const _CMD_LEAVE       = PREFIX + 'leave';
-const _CMD_PLAY        = PREFIX + 'play';
-const _CMD_PAUSE       = PREFIX + 'pause';
-const _CMD_RESUME      = PREFIX + 'resume';
-const _CMD_SHUFFLE     = PREFIX + 'shuffle';
-const _CMD_FAVORITE    = PREFIX + 'favorite';
-const _CMD_UNFAVORITE  = PREFIX + 'unfavorite';
-const _CMD_FAVORITES   = PREFIX + 'favorites';
-const _CMD_GENRE       = PREFIX + 'genre';
-const _CMD_GENRES      = PREFIX + 'genres';
-const _CMD_CLEAR       = PREFIX + 'clear';
-const _CMD_RANDOM      = PREFIX + 'random';
-const _CMD_SKIP        = PREFIX + 'skip';
-const _CMD_QUEUE       = PREFIX + 'list';
-const _CMD_DEBUG       = PREFIX + 'debug';
-const _CMD_TEST        = PREFIX + 'status';
-const _CMD_LANG        = PREFIX + 'lang';
+const _CMD_HELP = PREFIX + 'help';
+const _CMD_JOIN = PREFIX + 'join';
+const _CMD_LEAVE = PREFIX + 'leave';
+const _CMD_PLAY = PREFIX + 'play';
+const _CMD_PAUSE = PREFIX + 'pause';
+const _CMD_RESUME = PREFIX + 'resume';
+const _CMD_SHUFFLE = PREFIX + 'shuffle';
+const _CMD_FAVORITE = PREFIX + 'favorite';
+const _CMD_UNFAVORITE = PREFIX + 'unfavorite';
+const _CMD_FAVORITES = PREFIX + 'favorites';
+const _CMD_GENRE = PREFIX + 'genre';
+const _CMD_GENRES = PREFIX + 'genres';
+const _CMD_CLEAR = PREFIX + 'clear';
+const _CMD_RANDOM = PREFIX + 'random';
+const _CMD_SKIP = PREFIX + 'skip';
+const _CMD_QUEUE = PREFIX + 'playlist';
+const _CMD_DEBUG = PREFIX + 'debug';
+const _CMD_TEST = PREFIX + 'status';
+//const _CMD_CLEAN       = PREFIX + 'clean';
+const _CMD_DEL = PREFIX + 'del';
+const _CMD_PING = PREFIX + 'ping';
+const _CMD_LANG = PREFIX + 'lang';
 const PLAY_CMDS = [_CMD_PLAY, _CMD_PAUSE, _CMD_RESUME, _CMD_SHUFFLE, _CMD_SKIP, _CMD_GENRE, _CMD_GENRES, _CMD_RANDOM, _CMD_CLEAR, _CMD_QUEUE, _CMD_FAVORITE, _CMD_FAVORITES, _CMD_UNFAVORITE];
+
+
+
+//////Emojies////////
 
 const EMOJI_GREEN_CIRCLE = '🟢'
 const EMOJI_RED_CIRCLE = '🔴'
+const EMOJI_PAUSE = '⏸️'
+const EMOJI_PLAY = '▶️'
+const EMOJI_NEXT = '⏭️'
+const EMOJI_MPLAY = '🎶'
+const EMOJI_RESUME = '⏯️'
+const EMOJI_SHUFFLE = '🔀'
+const EMOJI_CLEAR = '🆑'
+const EMOJI_Q = '✔️'
+const EMOJI_HEART = '❤️'
+const EMOJI_LIST = '🧾'
+
 
 const GENRES = {
     'hip-hop': ['hip-hop', 'hip hop', 'hiphop', 'rap'],
@@ -219,11 +240,21 @@ discordClient.on('message', async (msg) => {
         if (msg.content.trim().toLowerCase() == _CMD_JOIN) {
             if (!msg.member.voice.channelID) {
                 msg.reply('Error: please join a voice channel first.')
+                .then(msg => {
+                    msg.delete({
+                        timeout: 1000 * 6
+                    })
+                })
             } else {
                 if (!guildMap.has(mapKey))
                     await connect(msg, mapKey)
                 else
                     msg.reply('Already connected')
+                    .then(msg => {
+                        msg.delete({
+                            timeout: 1000 * 25
+                        })
+                    });
             }
         } else if (msg.content.trim().toLowerCase() == _CMD_LEAVE) {
             if (guildMap.has(mapKey)) {
@@ -231,16 +262,31 @@ discordClient.on('message', async (msg) => {
                 if (val.voice_Channel) val.voice_Channel.leave()
                 if (val.voice_Connection) val.voice_Connection.disconnect()
                 if (val.musicYTStream) val.musicYTStream.destroy()
-                    guildMap.delete(mapKey)
+                guildMap.delete(mapKey)
                 msg.reply(" ")
-                msg.channel.send("Disconnected", {tts:true})
+                msg.channel.send("Disconnected", { tts: true })
+                .then(msg => {
+                    msg.delete({
+                        timeout: 1000 * 15
+                    })
+                })
             } else {
                 msg.reply("Cannot leave because not connected.")
+                .then(msg => {
+                    msg.delete({
+                        timeout: 1000 * 6
+                    })
+                })
             }
         }
-        else if ( PLAY_CMDS.indexOf( msg.content.trim().toLowerCase().split('\n')[0].split(' ')[0] ) >= 0 ) {
+        else if (PLAY_CMDS.indexOf(msg.content.trim().toLowerCase().split('\n')[0].split(' ')[0]) >= 0) {
             if (!msg.member.voice.channelID) {
                 msg.reply('Error: please join a voice channel first.')
+                .then(msg => {
+                    msg.delete({
+                        timeout: 1000 * 6
+                    })
+                })
             } else {
                 if (!guildMap.has(mapKey))
                     await connect(msg, mapKey)
@@ -248,6 +294,9 @@ discordClient.on('message', async (msg) => {
             }
         } else if (msg.content.trim().toLowerCase() == _CMD_HELP) {
             msg.reply(getHelpString());
+        }else if (msg.content.trim().toLowerCase() == _CMD_DEL) {
+            /////
+            msg.channel.send('dellll')
         }
         else if (msg.content.trim().toLowerCase() == _CMD_DEBUG) {
             console.log('toggling debug mode')
@@ -257,58 +306,99 @@ discordClient.on('message', async (msg) => {
             else
                 val.debug = true;
         }
+        // else if (msg.content.trim().toLowerCase() == _CMD_PING) {
+        //     msg.channel.send('pong! ');
+        // }
         else if (msg.content.trim().toLowerCase() == _CMD_TEST) {
-            msg.reply('Melody online. All functions working.')
+            msg.channel.send('🟢 Melody online. All functions working.');
         }
+        // else if (msg.content.trim().toLowerCase() == _CMD_CLEAN) {
+        //     if (!msg.member.permissions.has("MANAGE_MESSAGES")) return msg.channel.send('Insufficient Permissions');
+        //     msg.channel.bulkDelete(100);
+        //     msg.reply('100 Messages Deleted Successfully.', {timeout: 5000})
+        //     //.then(msg => msg.delete(3000));
+        //     ///setTimeout(() => msg.delete(), 5000)
+        //}
+        ////////Seperate Commands////////
+        else if (!msg.content.startsWith(PREFIX));
+
+        const args2 = msg.content.slice(PREFIX.length).split(/ +/);
+        const command = args2.shift().toLowerCase();
+
+        if (command === 'pekk') {
+            discordClient.commands.get('pekk').execute(msg, args2);
+        } else if (command === 'ping') {
+            discordClient.commands.get('ping').execute(msg, args2, discordClient);
+        } else if (command === 'clean') {
+            discordClient.commands.get('clean').execute(msg, args2);
+        } else if (command === 'kick') {
+            discordClient.commands.get('kick').execute(msg, args2);
+        } else if (command === 'ban') {
+            discordClient.commands.get('ban').execute(msg, args2);
+        } else if (command === 'setstatus') {
+            discordClient.commands.get('setstatus').execute(msg, args2, discordClient);
+        } else if (command === 'serverinfo') {
+            discordClient.commands.get('serverinfo').execute(msg, args2, discordClient);
+        } else if (command === 'rr') {
+            discordClient.commands.get('rbmc').execute(msg, args2, discordClient, Discord, _CMD_RESUME, _CMD_PAUSE, _CMD_PLAY);
+        }  
+        
+        // else if (command === 'df') {
+        //     discordClient.commands.get('df').execute(msg, args2, discordClient, Discord, dialogflow, uuid);
+        // } 
+
         else if (msg.content.split('\n')[0].split(' ')[0].trim().toLowerCase() == _CMD_LANG) {
             const lang = msg.content.replace(_CMD_LANG, '').trim().toLowerCase()
             listWitAIApps(data => {
-              if (!data.length)
-                return msg.reply('no apps found! :(')
-              for (const x of data) {
-                updateWitAIAppLang(x.id, lang, data => {
-                  if ('success' in data)
-                    msg.reply('succes!')
-                  else if ('error' in data && data.error !== 'Access token does not match')
-                    msg.reply('Error: ' + data.error)
-                })
-              }
+                if (!data.length)
+                    return msg.reply('no apps found! :(')
+                for (const x of data) {
+                    updateWitAIAppLang(x.id, lang, data => {
+                        if ('success' in data)
+                            msg.reply('succes!')
+                        else if ('error' in data && data.error !== 'Access token does not match')
+                            msg.reply('Error: ' + data.error)
+                    })
+                }
             })
         }
     } catch (e) {
         console.log('discordClient message: ' + e)
-        msg.reply('Error#180: Something went wrong, try again or contact the developers if this keeps happening.');
+        msg.reply('Error#180: Something went wrong, try again or contact the developers if this keeps happening.')
+        //  .then(msg =>
+        //      msg.delete(10000))
     }
 })
 
+
 function getHelpString() {
     let out = '**VOICE COMMANDS:**\n'
-        out += '```'
-        out += 'melody help\n'
-        out += 'melody play [ Song name, favorites]\n'
-        out += 'melody next/skip\n'
-        out += 'melody pause/stop\n'
-        out += 'melody resume\n'
-        out += 'melody set favorite. Add currently playing song to Favorites playlist\n'
-        out += 'melody show favorites\n'
-        out += 'melody disconnect / goodbye / leave\n'
-        out += 'melody show playlist\n'
-        out += 'melody clear playlist\n';
-        out += '```'
+    out += '```'
+    out += 'melody help\n'
+    out += 'melody play [ Song name, favorites]\n'
+    out += 'melody next/skip\n'
+    out += 'melody pause/stop\n'
+    out += 'melody resume\n'
+    out += 'melody set favorite. Add currently playing song to Favorites playlist\n'
+    out += 'melody show favorites\n'
+    out += 'melody disconnect / goodbye / leave\n'
+    out += 'melody show playlist\n'
+    out += 'melody clear playlist\n';
+    out += '```'
 
-        out += '**TEXT COMMANDS:**\n'
-        out += '```'
-        out += _CMD_HELP + '\n'
-        out += _CMD_JOIN + '/' + _CMD_LEAVE + '\n'
-        out += _CMD_PLAY + ' [query]\n'
-        out += _CMD_PAUSE + '/' + _CMD_RESUME + '\n'
-        out += _CMD_SKIP + '\n'
-        out += _CMD_FAVORITE + '\n'
-        out += _CMD_UNFAVORITE + ' [name]\n'
-        out += _CMD_FAVORITES + '\n'
-        out += _CMD_QUEUE + '\n';
-        out += _CMD_CLEAR + '\n';
-        out += '```'
+    out += '**TEXT COMMANDS:**\n'
+    out += '```'
+    out += _CMD_HELP + '\n'
+    out += _CMD_JOIN + '/' + _CMD_LEAVE + '\n'
+    out += _CMD_PLAY + ' [query]\n'
+    out += _CMD_PAUSE + '/' + _CMD_RESUME + '\n'
+    out += _CMD_SKIP + '\n'
+    out += _CMD_FAVORITE + '\n'
+    out += _CMD_UNFAVORITE + ' [name]\n'
+    out += _CMD_FAVORITES + '\n'
+    out += _CMD_QUEUE + '\n';
+    out += _CMD_CLEAR + '\n';
+    out += '```'
     return out;
 }
 
@@ -332,7 +422,7 @@ async function connect(msg, mapKey) {
             'debug': false,
         });
         speak_impl(voice_Connection, mapKey)
-        voice_Connection.on('disconnect', async(e) => {
+        voice_Connection.on('disconnect', async (e) => {
             if (e) console.log(e);
             guildMap.delete(mapKey);
         })
@@ -352,7 +442,7 @@ function speak_impl(voice_Connection, mapKey) {
         console.log(`I'm listening to ${user.username}`)
         // this creates a 16-bit signed PCM, stereo 48KHz stream
         const audioStream = voice_Connection.receiver.createStream(user, { mode: 'pcm' })
-        audioStream.on('error',  (e) => { 
+        audioStream.on('error', (e) => {
             console.log('audioStream: ' + e)
         });
         let buffer = [];
@@ -392,10 +482,10 @@ function process_commands_query(query, mapKey, userid) {
     const regex = /^melody ([a-zA-Z]+)(.+?)?$/;
     const m = query.toLowerCase().match(regex);
     if (m && m.length) {
-        const cmd = (m[1]||'').trim();
-        const args = (m[2]||'').trim();
+        const cmd = (m[1] || '').trim();
+        const args = (m[2] || '').trim();
 
-        switch(cmd) {
+        switch (cmd) {
             case 'help':
                 out = _CMD_HELP;
                 break;
@@ -411,42 +501,48 @@ function process_commands_query(query, mapKey, userid) {
             case 'genres':
                 out = _CMD_GENRES;
                 break;
+            case 'king':
+                out = _CMD_PING;
+                break;
             case 'stop':
                 out = _CMD_PAUSE;
                 break;
             case 'pause':
-                    out = _CMD_PAUSE;
+                out = _CMD_PAUSE;
                 break;
             case 'resume':
                 out = _CMD_RESUME;
                 break;
-            case 'clear playlist':
-                if (args == 'list')
+            case 'clear':
+                if (args == 'playlist')
                     out = _CMD_CLEAR;
                 break;
-            case 'show playlist':
+            case 'show':
+                if (args == 'playlist')
                     out = _CMD_QUEUE;
                 break;
             case 'leave':
-                    out = _CMD_LEAVE;
-                    break;
-            case 'goodbye':
-                    out = _CMD_LEAVE;
+                out = _CMD_LEAVE;
+                break;
+            case 'delete':
+                out = `-clean ${args}`
                 break;
             case 'disconnect':
+                out = _CMD_LEAVE;
+                break;
+            case 'fuck':
+                if (args == 'off')
                     out = _CMD_LEAVE;
                 break;
-            case 'fuck off':
-                    out = _CMD_LEAVE;
-                    break;
             case 'hello':
                 out = 'i am melody :)'
                 break;
             case 'status':
                 out = 'I am online. All functions working.'
                 break;
-            case 'show favorites':
-                out = _CMD_FAVORITES;
+            case 'show':
+                if (args == 'favorites')
+                    out = _CMD_FAVORITES;
                 break;
             case 'set':
                 switch (args) {
@@ -458,7 +554,7 @@ function process_commands_query(query, mapKey, userid) {
                 break;
             case 'play':
             case 'player':
-                switch(args) {
+                switch (args) {
                     case 'random':
                         out = _CMD_RANDOM;
                         break;
@@ -502,10 +598,10 @@ async function music_message(message, mapKey) {
                 if (mapKey in GUILD_FAVORITES) {
                     let arr = GUILD_FAVORITES[mapKey];
                     if (arr.length) {
-                        for (let item of arr)     {
+                        for (let item of arr) {
                             addToQueue(item, mapKey)
                         }
-                        message.react(EMOJI_GREEN_CIRCLE)
+                        message.react(EMOJI_PLAY)
                     } else {
                         message.channel.send('No favorites yet.')
                     }
@@ -520,7 +616,7 @@ async function music_message(message, mapKey) {
                     for (let item of arr)
                         addToQueue(item, mapKey);
                     message.react(EMOJI_GREEN_CIRCLE)
-                } catch(e) {
+                } catch (e) {
                     console.log('music_message 464:' + e)
                     message.channel.send('Failed processing spotify link: ' + qry);
                 }
@@ -531,7 +627,7 @@ async function music_message(message, mapKey) {
                         const arr = await youtube_tracks_from_playlist(qry);
                         for (let item of arr)
                             addToQueue(item, mapKey)
-                        message.react(EMOJI_GREEN_CIRCLE)
+                        message.react(EMOJI_PLAY)
                     } catch (e) {
                         console.log('music_message 476:' + e)
                         message.channel.send('Failed to process playlist: ' + qry);
@@ -539,7 +635,7 @@ async function music_message(message, mapKey) {
                 } else {
                     try {
                         addToQueue(qry, mapKey);
-                        message.react(EMOJI_GREEN_CIRCLE)
+                        message.react(EMOJI_PLAY)
                     } catch (e) {
                         console.log('music_message 484:' + e)
                         message.channel.send('Failed to find video for (try again): ' + qry);
@@ -548,41 +644,41 @@ async function music_message(message, mapKey) {
             }
         } else if (args[0] == _CMD_SKIP) {
 
-            skipMusic(mapKey, ()=>{
-                message.react(EMOJI_GREEN_CIRCLE)
-            }, (msg)=>{
+            skipMusic(mapKey, () => {
+                message.react(EMOJI_NEXT)
+            }, (msg) => {
                 if (msg && msg.length) message.channel.send(msg);
             })
 
         } else if (args[0] == _CMD_PAUSE) {
 
-            pauseMusic(mapKey, ()=>{
-                message.react(EMOJI_GREEN_CIRCLE)
-            }, (msg)=>{
+            pauseMusic(mapKey, () => {
+                message.react(EMOJI_PAUSE)
+            }, (msg) => {
                 if (msg && msg.length) message.channel.send(msg);
             })
 
         } else if (args[0] == _CMD_RESUME) {
 
-            resumeMusic(mapKey, ()=>{
-                message.react(EMOJI_GREEN_CIRCLE)
-            }, (msg)=>{
+            resumeMusic(mapKey, () => {
+                message.react(EMOJI_RESUME)
+            }, (msg) => {
                 if (msg && msg.length) message.channel.send(msg);
             })
 
         } else if (args[0] == _CMD_SHUFFLE) {
 
-            shuffleMusic(mapKey, ()=>{
-                message.react(EMOJI_GREEN_CIRCLE)
-            }, (msg)=>{
+            shuffleMusic(mapKey, () => {
+                message.react(EMOJI_SHUFFLE)
+            }, (msg) => {
                 if (msg && msg.length) message.channel.send(msg);
             })
 
         } else if (args[0] == _CMD_CLEAR) {
 
-            clearQueue(mapKey, ()=>{
-                message.react(EMOJI_GREEN_CIRCLE)
-            }, (msg)=>{
+            clearQueue(mapKey, () => {
+                message.react(EMOJI_Q)
+            }, (msg) => {
                 if (msg && msg.length) message.channel.send(msg);
             })
 
@@ -591,9 +687,14 @@ async function music_message(message, mapKey) {
             const chunks = message_chunking(getQueueString(mapKey), DISCORD_MSG_LIMIT);
             for (let chunk of chunks) {
                 console.log(chunk.length)
-                message.channel.send(chunk);
+                message.channel.send(chunk)
+                .then(msg => {
+                    msg.delete({
+                        timeout: 1000 * 30
+                    })
+                });
             }
-            message.react(EMOJI_GREEN_CIRCLE)
+            message.react(EMOJI_LIST)
 
         } else if (args[0] == _CMD_RANDOM) {
 
@@ -641,46 +742,59 @@ async function music_message(message, mapKey) {
                 const chunks = message_chunking(favs, DISCORD_MSG_LIMIT);
                 for (let chunk of chunks)
                     message.channel.send(chunk);
-                message.react(EMOJI_GREEN_CIRCLE)
+                message.react(EMOJI_HEART)
             }
 
         } else if (args[0] == _CMD_FAVORITE) {
 
-            setAsFavorite(mapKey, ()=>{
-                message.react(EMOJI_GREEN_CIRCLE)
-            }, (msg)=> {
+            setAsFavorite(mapKey, () => {
+                message.react(EMOJI_HEART)
+            }, (msg) => {
                 if (msg && msg.length) message.channel.send(msg);
             })
 
-        }  else if (args[0] == _CMD_UNFAVORITE) {
+        } else if (args[0] == _CMD_UNFAVORITE) {
 
             const qry = args.slice(1).join(' ');
-            unFavorite(qry, mapKey, ()=>{
-                message.react(EMOJI_GREEN_CIRCLE)
-            }, (msg)=>{
+            unFavorite(qry, mapKey, () => {
+                message.react(EMOJI_Q)
+            }, (msg) => {
                 if (msg && msg.length) message.channel.send(msg);
             })
 
-        } 
+        }
 
     }
-    
-    queueTryPlayNext(mapKey, (title)=>{
-        message.react(EMOJI_GREEN_CIRCLE);
-        message.channel.send('Now playing: **' + title + '**')
-    }, (msg)=>{
+
+    queueTryPlayNext(mapKey, (title) => {
+        message.react(EMOJI_PLAY);
+        message.channel.send('Now playing: **' + title + '**', { tts: true })
+        .then(msg => {
+            msg.delete({
+                timeout: 1000 * 25
+            })
+        });
+        message.channel.bulkDelete(2, true)
+        message.channel.send(`.rr`)
+        .then(msg => {
+            msg.delete({
+                timeout: 500
+            })
+        });
+    }, (msg) => {
         if (msg && msg.length) message.channel.send(msg);
     });
 }
+//////Above is the first song play emoji /////
 
 let GUILD_FAVORITES = {};
 const GUILD_FAVORITES_FILE = './data/guild_favorites.json';
-setInterval(()=>{
+setInterval(() => {
     var json = JSON.stringify(GUILD_FAVORITES);
-    fs.writeFile(GUILD_FAVORITES_FILE, json, 'utf8', (err)=>{
+    fs.writeFile(GUILD_FAVORITES_FILE, json, 'utf8', (err) => {
         if (err) return console.log('GUILD_FAVORITES_FILE:' + err);
     });
-},1000);
+}, 1000);
 function load_guild_favorites() {
     if (fs.existsSync(GUILD_FAVORITES_FILE)) {
         const data = fs.readFileSync(GUILD_FAVORITES_FILE, 'utf8');
@@ -698,7 +812,7 @@ function setAsFavorite(mapKey, cbok, cberr) {
             GUILD_FAVORITES[mapKey] = [];
         }
         if (!GUILD_FAVORITES[mapKey].includes(val.currentPlayingQuery))
-            GUILD_FAVORITES[mapKey].push( val.currentPlayingQuery )
+            GUILD_FAVORITES[mapKey].push(val.currentPlayingQuery)
         cbok()
     }
 }
@@ -711,7 +825,7 @@ function unFavorite(qry, mapKey, cbok, cberr) {
             cberr('No favorites.');
         } else {
             if (GUILD_FAVORITES[mapKey].includes(qry)) {
-                GUILD_FAVORITES[mapKey] = GUILD_FAVORITES[mapKey].filter(e => e !== qry); 
+                GUILD_FAVORITES[mapKey] = GUILD_FAVORITES[mapKey].filter(e => e !== qry);
                 cbok()
             } else {
                 cberr('Favorite not found.');
@@ -725,7 +839,7 @@ function getFavoritesString(mapKey) {
     if (mapKey in GUILD_FAVORITES) {
         let arr = GUILD_FAVORITES[mapKey];
         if (arr.length) {
-            for (let item of arr)     {
+            for (let item of arr) {
                 out += item + '\n';
             }
         } else {
@@ -769,7 +883,7 @@ function getQueueString(mapKey) {
     if (val.currentPlayingTitle != null)
         _message += '[X] ' + val.currentPlayingTitle + '\n';
     for (let i = 0; i < val.musicQueue.length; i++) {
-        _message += '['+i+'] ' + val.musicQueue[i] + '\n';
+        _message += '[' + i + '] ' + val.musicQueue[i] + '\n';
     }
     if (val.currentPlayingTitle == null && val.musicQueue.length == 0)
         _message += '(empty)\n'
@@ -802,8 +916,8 @@ async function queueTryPlayNext(mapKey, cbok, cberr) {
         val.musicYTStream = ytdl('https://www.youtube.com/watch?v=' + ytid, {
             filter: 'audioonly',
             quality: 'highestaudio',
-            highWaterMark: 1024*1024*10, // 10mb
-        }, {highWaterMark: 1})
+            highWaterMark: 1024 * 1024 * 10, // 10mb
+        }, { highWaterMark: 1 })
         val.musicDispatcher = val.voice_Connection.play(val.musicYTStream);
         val.musicDispatcher.on('finish', () => {
             val.currentPlayingTitle = val.currentPlayingQuery = null;
@@ -812,14 +926,14 @@ async function queueTryPlayNext(mapKey, cbok, cberr) {
         val.musicDispatcher.on('error', (err) => {
             if (err) console.log('musicDispatcher error: ' + err);
             console.log(err)
-            cberr('Error playing <'+title+'>, try again?')
+            cberr('Error playing <' + title + '>, try again?')
             val.currentPlayingTitle = val.currentPlayingQuery = null;
             queueTryPlayNext(mapKey, cbok, cberr);
         });
         val.musicDispatcher.on('start', () => {
             cbok(title)
         });
-        
+
     } catch (e) {
         console.log('queueTryPlayNext: ' + e)
         cberr('Error playing, try again?')
@@ -890,8 +1004,8 @@ function shuffleMusic(mapKey, cbok, cberr) {
 //////////////////////////////////////////
 async function transcribe(buffer) {
 
-  return transcribe_witai(buffer)
-  // return transcribe_gspeech(buffer)
+    return transcribe_witai(buffer)
+    // return transcribe_gspeech(buffer)
 }
 
 // WitAI
@@ -901,7 +1015,7 @@ async function transcribe_witai(buffer) {
     try {
         // ensure we do not send more than one request per second
         if (witAI_lastcallTS != null) {
-            let now = Math.floor(new Date());    
+            let now = Math.floor(new Date());
             while (now - witAI_lastcallTS < 1000) {
                 console.log('sleep')
                 await sleep(100);
@@ -933,35 +1047,35 @@ async function transcribe_witai(buffer) {
 // https://cloud.google.com/docs/authentication/production
 const gspeech = require('@google-cloud/speech');
 const gspeechclient = new gspeech.SpeechClient({
-  projectId: 'discordbot',
-  keyFilename: 'gspeech_key.json'
+    projectId: 'discordbot',
+    keyFilename: 'gspeech_key.json'
 });
 
 async function transcribe_gspeech(buffer) {
-  try {
-      console.log('transcribe_gspeech')
-      const bytes = buffer.toString('base64');
-      const audio = {
-        content: bytes,
-      };
-      const config = {
-        encoding: 'LINEAR16',
-        sampleRateHertz: 48000,
-        languageCode: 'en-US',  // https://cloud.google.com/speech-to-text/docs/languages
-      };
-      const request = {
-        audio: audio,
-        config: config,
-      };
+    try {
+        console.log('transcribe_gspeech')
+        const bytes = buffer.toString('base64');
+        const audio = {
+            content: bytes,
+        };
+        const config = {
+            encoding: 'LINEAR16',
+            sampleRateHertz: 48000,
+            languageCode: 'en-US',  // https://cloud.google.com/speech-to-text/docs/languages
+        };
+        const request = {
+            audio: audio,
+            config: config,
+        };
 
-      const [response] = await gspeechclient.recognize(request);
-      const transcription = response.results
-        .map(result => result.alternatives[0].transcript)
-        .join('\n');
-      console.log(`gspeech: ${transcription}`);
-      return transcription;
+        const [response] = await gspeechclient.recognize(request);
+        const transcription = response.results
+            .map(result => result.alternatives[0].transcript)
+            .join('\n');
+        console.log(`gspeech: ${transcription}`);
+        return transcription;
 
-  } catch (e) { console.log('transcribe_gspeech 368:' + e) }
+    } catch (e) { console.log('transcribe_gspeech 368:' + e) }
 }
 
 //////////////////////////////////////////
@@ -988,7 +1102,7 @@ async function searchYoutubeVideo(query) {
         }
         const playlists = r.playlists || r.lists
         const channels = r.channels || r.accounts
-        return {id:videos[0].videoId, title:videos[0].title};
+        return { id: videos[0].videoId, title: videos[0].title };
     } catch (e) {
         console.log(r)
         console.log('searchYoutubeVideo: ' + e)
@@ -1003,7 +1117,7 @@ function isYoutubePlaylist(str) {
     return str.toLowerCase().indexOf('?list=') > -1 || str.toLowerCase().indexOf('&list=') > -1;
 }
 
-async function youtube_tracks_from_playlist(url, isretry=false) {
+async function youtube_tracks_from_playlist(url, isretry = false) {
     const data = await ytlist(url, 'url');
     if (data && 'data' in data && 'playlist' in data.data && data.data.playlist && data.data.playlist.length) {
         return data.data.playlist
@@ -1017,15 +1131,15 @@ async function youtube_tracks_from_playlist(url, isretry=false) {
     }
 }
 
-async function getYoutubeVideoData(str, isretry=false) {
+async function getYoutubeVideoData(str, isretry = false) {
     try {
         if (str in YT_CACHE) {
             const val = YT_CACHE[str];
             let now = Math.floor(new Date());
             const dt = now - val.created;
-            if (dt < 1000*60*60*24*14) { // 14 days ttl
+            if (dt < 1000 * 60 * 60 * 24 * 14) { // 14 days ttl
                 console.log('cache hit: ' + str)
-                return {id:val.id, title:val.title};
+                return { id: val.id, title: val.title };
             } else {
                 console.log('cache expired: ' + str)
             }
@@ -1039,7 +1153,7 @@ async function getYoutubeVideoData(str, isretry=false) {
 
         const data = await searchYoutubeVideo(qry);
         if (data && 'id' in data && 'title' in data) {
-            YT_CACHE[str] = {id:data.id, title:data.title, created: Math.floor(new Date())};
+            YT_CACHE[str] = { id: data.id, title: data.title, created: Math.floor(new Date()) };
         }
         return data;
     } catch (e) {
@@ -1054,12 +1168,12 @@ async function getYoutubeVideoData(str, isretry=false) {
 }
 
 const YT_CACHE_FILE = './data/yt_cache.json';
-setInterval(()=>{
+setInterval(() => {
     var json = JSON.stringify(YT_CACHE);
-    fs.writeFile(YT_CACHE_FILE, json, 'utf8', (err)=>{
+    fs.writeFile(YT_CACHE_FILE, json, 'utf8', (err) => {
         if (err) return console.log('YT_CACHE_FILE: ' + err);
     });
-},1000);
+}, 1000);
 function load_yt_cache() {
     if (fs.existsSync(YT_CACHE_FILE)) {
         const data = fs.readFileSync(YT_CACHE_FILE, 'utf8');
@@ -1076,6 +1190,9 @@ load_yt_cache();
 //////////////// SPOTIFY /////////////////
 //////////////////////////////////////////
 const Spotify = require('node-spotify-api');
+const { title } = require('process');
+const { del } = require('request');
+
 const spotifyClient = new Spotify({
     id: SPOTIFY_TOKEN_ID,
     secret: SPOTIFY_TOKEN_SECRET
@@ -1104,7 +1221,7 @@ async function spotify_new_releases() {
 
     let arr = await spotifyClient
         .request('https://api.spotify.com/v1/browse/new-releases')
-        .then(function(data) {
+        .then(function (data) {
             let arr = [];
             if ('albums' in data) {
                 for (let item of data.albums.items) {
@@ -1114,7 +1231,7 @@ async function spotify_new_releases() {
             }
             return arr;
         })
-        .catch(function(err) {
+        .catch(function (err) {
             console.error('spotify_new_releases: ' + err);
         });
 
@@ -1125,7 +1242,7 @@ async function spotify_recommended(genre) {
 
     let arr = await spotifyClient
         .request('https://api.spotify.com/v1/recommendations?seed_genres=' + genre)
-        .then(function(data) {
+        .then(function (data) {
             let arr = [];
             if ('tracks' in data) {
                 for (let item of data.tracks) {
@@ -1135,7 +1252,7 @@ async function spotify_recommended(genre) {
             }
             return arr;
         })
-        .catch(function(err) {
+        .catch(function (err) {
             console.error('spotify_recommended: ' + err);
         });
 
@@ -1150,7 +1267,7 @@ async function spotify_tracks_from_playlist(spotifyurl) {
     console.log(url)
     let arr = await spotifyClient
         .request(url)
-        .then(function(data) {
+        .then(function (data) {
             let arr = [];
             if ('items' in data) {
                 for (let item of data.items) {
@@ -1160,12 +1277,25 @@ async function spotify_tracks_from_playlist(spotifyurl) {
             }
             return arr;
         })
-        .catch(function(err) {
+        .catch(function (err) {
             console.error('spotify_tracks_from_playlist: ' + err);
         });
 
     return arr;
 }
+
+discordClient.commands = new Discord.Collection();
+
+const commandFiles = fs.readdirSync('./commands/').filter(file => file.endsWith('.js'));
+for (const file of commandFiles) {
+    const command = require(`./commands/${file}`);
+    discordClient.commands.set(command.name, command);
+}
+
+
+//////
 //////////////////////////////////////////
 //////////////////////////////////////////
 //////////////////////////////////////////
+
+///////////
