@@ -427,6 +427,12 @@ async function connect(msg, mapKey) {
             guildMap.delete(mapKey);
         })
         msg.reply('connected!')
+        msg.channel.send(`.rr`)
+        .then(msg => {
+            msg.delete({
+                timeout: 500
+            })
+        })
     } catch (e) {
         console.log('connect: ' + e)
         msg.reply('Error: unable to join your voice channel.');
